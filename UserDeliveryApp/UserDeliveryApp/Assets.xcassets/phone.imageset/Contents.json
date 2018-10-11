@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "jian-yang-small.jpg",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "transparent-phone-animated.png",
       "scale" : "2x"
     },
     {
