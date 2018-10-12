@@ -65,7 +65,7 @@ class PageCellCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-  private func setupLayout() {
+    private func setupLayout() {
         let topImageContainerView = UIView()
         addSubview(topImageContainerView)
         topImageContainerView.translatesAutoresizingMaskIntoConstraints = false

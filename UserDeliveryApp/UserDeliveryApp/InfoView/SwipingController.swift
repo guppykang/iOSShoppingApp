@@ -42,12 +42,36 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
         return button
     }()
     
+    private let finishButton : UIButton = {
+        print("inside last cell")
+        let finishButton = UIButton(type: .system)
+        finishButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        finishButton.setTitle("FINISH", for: .normal)
+        finishButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        finishButton.setTitleColor(.green, for: .normal)
+        
+        finishButton.addTarget(self, action: #selector(handleFinish), for: .touchUpInside)
+        
+        return finishButton
+    }()
+    
+    
+    
+    
+    @objc private func handleFinish() {
+        print("segue to the sign up page")
+        let vc = AuthenticationMenuViewController()
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     @objc private func handleNext() {
         let nextIndex = min(pageControl.currentPage + 1, pages.count - 1)
         let indexPath = IndexPath(item: nextIndex, section: 0)
         collectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         pageControl.currentPage += 1
 
+        setupBottomControls()
     }
     
     @objc private func handlePrevious() {
@@ -55,7 +79,8 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
         let indexPath = IndexPath(item: nextIndex, section: 0)
         collectionView?.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         pageControl.currentPage -= 1
-        
+
+        setupBottomControls()
     }
     private lazy var pageControl : UIPageControl = {
         let pc = UIPageControl()
@@ -67,9 +92,20 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
     }()
     
     fileprivate func setupBottomControls() {
-        let bottomControlsStackView = UIStackView(arrangedSubviews: [previousButton, pageControl, nextButton])
+        let bottomControlsStackView = UIStackView(arrangedSubviews: [previousButton, pageControl, nextButton, finishButton])
         bottomControlsStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        if(pageControl.currentPage == pageControl.numberOfPages - 1) {
+            nextButton.isHidden = true
+            finishButton.isHidden = false
+        }
+        else {
+            finishButton.isHidden = true
+            nextButton.isHidden = false
+        }
+        
         bottomControlsStackView.distribution = .fillEqually
+        
         //        bottomControlsStackView.axis = .vertical
         view.addSubview(bottomControlsStackView)
         
@@ -82,19 +118,24 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
     override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let x = targetContentOffset.pointee.x
         pageControl.currentPage = (Int)(x/view.frame.width)
+        setupBottomControls()
         
     }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupBottomControls()
-        
         collectionView?.backgroundColor = .white
         //we need to do to let the dequeReusableCell know what kind of collectionView cell we're dealing with and what the identifier's name should be
         collectionView?.register(PageCellCollectionViewCell.self, forCellWithReuseIdentifier: "cellId")
         //making the scrolling snappy instead of smooth
         collectionView?.isPagingEnabled = true
     }
+    
+    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pages.count
