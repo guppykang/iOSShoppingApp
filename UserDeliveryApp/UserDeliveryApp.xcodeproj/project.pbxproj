@@ -17,6 +17,8 @@
 		0D040AFB216DD8E600F8F8D0 /* PageCellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040AFA216DD8E600F8F8D0 /* PageCellCollectionViewCell.swift */; };
 		0D040AFD216F1AE200F8F8D0 /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040AFC216F1AE200F8F8D0 /* Page.swift */; };
 		0D040B012170774C00F8F8D0 /* AuthenticationMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B002170774C00F8F8D0 /* AuthenticationMenuViewController.swift */; };
+		0D040B032171D15300F8F8D0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B022171D15300F8F8D0 /* LoginViewController.swift */; };
+		0D040B052171D15D00F8F8D0 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B042171D15D00F8F8D0 /* RegisterViewController.swift */; };
 		2F45A25D59ADFEED684A7BBC /* Pods_UserDeliveryApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 560A19FDA58A3C7035F658A5 /* Pods_UserDeliveryApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +35,8 @@
 		0D040AFA216DD8E600F8F8D0 /* PageCellCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCellCollectionViewCell.swift; sourceTree = "<group>"; };
 		0D040AFC216F1AE200F8F8D0 /* Page.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 		0D040B002170774C00F8F8D0 /* AuthenticationMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationMenuViewController.swift; sourceTree = "<group>"; };
+		0D040B022171D15300F8F8D0 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		0D040B042171D15D00F8F8D0 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		560A19FDA58A3C7035F658A5 /* Pods_UserDeliveryApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UserDeliveryApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74B06953A4C265CA13AA7C4F /* Pods-UserDeliveryApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserDeliveryApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UserDeliveryApp/Pods-UserDeliveryApp.debug.xcconfig"; sourceTree = "<group>"; };
 		8259475E55FE2CABA2BDAAA1 /* Pods-UserDeliveryApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserDeliveryApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-UserDeliveryApp/Pods-UserDeliveryApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -98,6 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				0D040B002170774C00F8F8D0 /* AuthenticationMenuViewController.swift */,
+				0D040B022171D15300F8F8D0 /* LoginViewController.swift */,
+				0D040B042171D15D00F8F8D0 /* RegisterViewController.swift */,
 			);
 			path = LoginView;
 			sourceTree = "<group>";
@@ -246,8 +252,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D040B032171D15300F8F8D0 /* LoginViewController.swift in Sources */,
 				0D040B012170774C00F8F8D0 /* AuthenticationMenuViewController.swift in Sources */,
 				0D040AE7216DB41F00F8F8D0 /* InfoViewController.swift in Sources */,
+				0D040B052171D15D00F8F8D0 /* RegisterViewController.swift in Sources */,
 				0D040AF9216DD29100F8F8D0 /* SwipingController.swift in Sources */,
 				0D040AFB216DD8E600F8F8D0 /* PageCellCollectionViewCell.swift in Sources */,
 				0D040AE5216DB41F00F8F8D0 /* AppDelegate.swift in Sources */,
