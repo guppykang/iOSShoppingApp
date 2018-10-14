@@ -9,7 +9,8 @@
 import UIKit
 
 class AuthenticationMenuViewController: UIViewController {
-
+    
+    
     //Title
     let titleLabel : UILabel = {
         let label = UILabel()
@@ -17,6 +18,31 @@ class AuthenticationMenuViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
+    }()
+    
+    //Container view
+    let inputContainterView : UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.layer.cornerRadius = 5
+        containerView.layer.masksToBounds = true
+        return containerView
+    }()
+    
+    //text field for Username and password
+    let usernameTextField : UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Username"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    let passwordTextField : UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Password"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
     }()
     
     //login button
@@ -34,8 +60,7 @@ class AuthenticationMenuViewController: UIViewController {
     }()
     
     @objc func handleLoginButton() {
-        let vc = LoginViewController()
-        self.present(vc, animated: true, completion: nil)
+        print("go to the main menu if the user sucessfully logs in")
     }
     
     //Register Button
@@ -63,14 +88,36 @@ class AuthenticationMenuViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(loginButton)
         view.addSubview(registerButton)
+        view.addSubview(inputContainterView)
+
         
         //title Label
         titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
         
+        //container view
+        inputContainterView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputContainterView.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 100).isActive  = true
+        inputContainterView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
+        inputContainterView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        inputContainterView.addSubview(usernameTextField)
+        inputContainterView.addSubview(passwordTextField)
+        
+        //username text field
+        usernameTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        usernameTextField.topAnchor.constraint(equalTo: inputContainterView.topAnchor).isActive  = true
+        usernameTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        usernameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/2).isActive  = true
+        
+        passwordTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        passwordTextField.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor).isActive  = true
+        passwordTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        passwordTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/2).isActive  = true
+        
         //login button
         loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        loginButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 150).isActive = true
+        loginButton.topAnchor.constraint(equalTo: inputContainterView.bottomAnchor, constant: 10).isActive = true
         loginButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
         
         
@@ -78,6 +125,8 @@ class AuthenticationMenuViewController: UIViewController {
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         registerButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 10).isActive = true
         registerButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        
+       
         
     }
     
