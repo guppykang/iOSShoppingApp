@@ -7,14 +7,193 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+
 
 class RegisterViewController: UIViewController {
-
+    //Title
+    let titleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "CART"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    //Container view
+    let inputContainterView : UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.layer.cornerRadius = 5
+        containerView.layer.masksToBounds = true
+        return containerView
+    }()
+    
+    let nameTextField : UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Name"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    let phoneNumberTextField : UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Phone Number"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    //text field for Username and password
+    let usernameTextField : UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Username"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    let passwordTextField : UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Password"
+        textField.isSecureTextEntry = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    //Register Button
+    let registerButton : UIButton = {
+        let button = UIButton(type: .system)
+        
+        button.setTitle("Register", for: .normal)
+        button.backgroundColor = .blue
+        button.setTitleColor(.white, for: .normal)
+        
+        button.addTarget(self, action: #selector(handleRegisterButton), for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    @objc func handleRegisterButton() {
+        guard
+            let email = usernameTextField.text,
+            let password = passwordTextField.text,
+            let name = nameTextField.text,
+            let phoneNumber = phoneNumberTextField.text
+            
+            else {
+                
+                return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { user, error in
+            //if there are no errors, you try to sign in to authenticate that it is working
+            print("\nAttempting to create a new user")
+            if error != nil {
+                // This signin function will trigger the listener in the didLoad function above. It will then segue into the table view
+                let alert = UIAlertController(title: "Register Failed",
+                                              message: error!.localizedDescription,
+                                              preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                print("Successful Registered New Account");
+            }
+            
+            
+            guard let uid = user?.user.uid else {
+                return
+            }
+            
+            
+            let reference = Database.database().reference(fromURL: "https://groceryforuser-79e3b.firebaseio.com/")
+            
+            let userReference = reference.child("Users").child(uid)
+            
+            
+            //TODO : Store user encryped version of the user password
+            let newUserValues = ["name" : name, "phone number" : phoneNumber, "email" : email]
+            
+            userReference.updateChildValues(newUserValues, withCompletionBlock: {(newChildError, ref) in
+                if (newChildError != nil){
+                    print ("Error \(String(describing: newChildError))")
+                    return
+                }
+                
+                let vc = HomeViewController()
+                self.present(vc, animated: true, completion: nil)
+                print("Succesfully saved user to the database")
+            }  )
+        }//end auth
+    }
+    
+    func setupLayout() {
+        view.addSubview(titleLabel)
+        view.addSubview(registerButton)
+        view.addSubview(inputContainterView)
+        
+        
+        //title Label
+        titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
+        
+        //container view
+        inputContainterView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        inputContainterView.topAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 100).isActive  = true
+        inputContainterView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
+        inputContainterView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        
+        inputContainterView.addSubview(nameTextField)
+        inputContainterView.addSubview(phoneNumberTextField)
+        inputContainterView.addSubview(usernameTextField)
+        inputContainterView.addSubview(passwordTextField)
+        
+        //Name
+        nameTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        nameTextField.topAnchor.constraint(equalTo: inputContainterView.topAnchor).isActive  = true
+        nameTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        nameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        
+        //Phone Number
+        phoneNumberTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        phoneNumberTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive  = true
+        phoneNumberTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        phoneNumberTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        
+        //username text field
+        usernameTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        usernameTextField.topAnchor.constraint(equalTo: phoneNumberTextField.bottomAnchor).isActive  = true
+        usernameTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        usernameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        
+        
+        
+        //password
+        passwordTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        passwordTextField.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor).isActive  = true
+        passwordTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        passwordTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        
+        //register button
+        registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        registerButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
+        registerButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
+        
+        
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .yellow
-        // Do any additional setup after loading the view.
+        
+        setupLayout()
+
+
     }
     
 

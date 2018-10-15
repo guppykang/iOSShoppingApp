@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+
 
 class AuthenticationMenuViewController: UIViewController {
     
@@ -41,6 +44,7 @@ class AuthenticationMenuViewController: UIViewController {
     let passwordTextField : UITextField = {
         let textField = UITextField()
         textField.placeholder = "Password"
+        textField.isSecureTextEntry = true
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -60,7 +64,38 @@ class AuthenticationMenuViewController: UIViewController {
     }()
     
     @objc func handleLoginButton() {
-        print("go to the main menu if the user sucessfully logs in")
+        //make sure that the login and password text Fields are not empty
+        guard
+            let email = usernameTextField.text,
+            let password = passwordTextField.text,
+            email.count >= 0,
+            password.count >= 0
+            else {
+                print("invalid user or ID")
+                return
+        }
+        
+        
+        Auth.auth().signIn(withEmail: email, password: password) { user, error in
+            if let error = error, user == nil {
+                let alert = UIAlertController(title: "Sign In Failed",
+                                              message: error.localizedDescription,
+                                              preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                
+                self.present(alert, animated: true, completion: nil)
+            }
+            else {
+                let layout = UICollectionViewFlowLayout()
+                layout.scrollDirection = .horizontal
+                let homeViewController = HomeViewController(collectionViewLayout : layout)
+                self.present(homeViewController, animated: true, completion: nil)
+                
+                print("Successful Login")
+                
+            }
+        }
     }
     
     //Register Button
