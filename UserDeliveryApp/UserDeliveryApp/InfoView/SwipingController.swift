@@ -61,8 +61,13 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
     
     @objc private func handleFinish() {
         print("segue to the sign up page")
-        let vc = AuthenticationMenuViewController()
-        self.present(vc, animated: true, completion: nil)
+        /*let vc = HomeViewController()
+        self.present(vc, animated: true, completion: nil)*/
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let homeViewController = HomeViewController(collectionViewLayout : layout)
+        self.present(homeViewController, animated: true, completion: nil)
     }
     
     @objc private func handleNext() {

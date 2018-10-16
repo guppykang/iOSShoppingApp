@@ -19,6 +19,7 @@
 		0D040B012170774C00F8F8D0 /* AuthenticationMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B002170774C00F8F8D0 /* AuthenticationMenuViewController.swift */; };
 		0D040B052171D15D00F8F8D0 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B042171D15D00F8F8D0 /* RegisterViewController.swift */; };
 		0D040B08217461C400F8F8D0 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B07217461C400F8F8D0 /* HomeViewController.swift */; };
+		0D040B0A21746DB700F8F8D0 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B0921746DB700F8F8D0 /* CategoryCell.swift */; };
 		2F45A25D59ADFEED684A7BBC /* Pods_UserDeliveryApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 560A19FDA58A3C7035F658A5 /* Pods_UserDeliveryApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		0D040B002170774C00F8F8D0 /* AuthenticationMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationMenuViewController.swift; sourceTree = "<group>"; };
 		0D040B042171D15D00F8F8D0 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		0D040B07217461C400F8F8D0 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		0D040B0921746DB700F8F8D0 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		560A19FDA58A3C7035F658A5 /* Pods_UserDeliveryApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UserDeliveryApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74B06953A4C265CA13AA7C4F /* Pods-UserDeliveryApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserDeliveryApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UserDeliveryApp/Pods-UserDeliveryApp.debug.xcconfig"; sourceTree = "<group>"; };
 		8259475E55FE2CABA2BDAAA1 /* Pods-UserDeliveryApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserDeliveryApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-UserDeliveryApp/Pods-UserDeliveryApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				0D040B07217461C400F8F8D0 /* HomeViewController.swift */,
+				0D040B0921746DB700F8F8D0 /* CategoryCell.swift */,
 			);
 			path = MainMenu;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				0D040AF9216DD29100F8F8D0 /* SwipingController.swift in Sources */,
 				0D040AFB216DD8E600F8F8D0 /* PageCellCollectionViewCell.swift in Sources */,
 				0D040AE5216DB41F00F8F8D0 /* AppDelegate.swift in Sources */,
+				0D040B0A21746DB700F8F8D0 /* CategoryCell.swift in Sources */,
 				0D040AFD216F1AE200F8F8D0 /* Page.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

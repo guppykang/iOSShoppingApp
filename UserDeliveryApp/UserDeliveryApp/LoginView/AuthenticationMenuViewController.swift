@@ -88,7 +88,7 @@ class AuthenticationMenuViewController: UIViewController {
             }
             else {
                 let layout = UICollectionViewFlowLayout()
-                layout.scrollDirection = .horizontal
+                layout.scrollDirection = .vertical
                 let homeViewController = HomeViewController(collectionViewLayout : layout)
                 self.present(homeViewController, animated: true, completion: nil)
                 

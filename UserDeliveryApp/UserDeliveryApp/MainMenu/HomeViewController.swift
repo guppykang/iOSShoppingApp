@@ -12,12 +12,13 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: "cellId")
+        collectionView?.backgroundColor = .white
+        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: "cellId")
         // Do any additional setup after loading the view.
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 8
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -25,22 +26,10 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         return cell
     }
 
-    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //creates the cells to be the length and height of the entire view
+        return CGSize(width: view.frame.width, height: 200)
+    }
 
 }
 
-class CategoryCell: UICollectionViewCell {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupViews() {
-        backgroundColor = .red
-    }
-    
-}
