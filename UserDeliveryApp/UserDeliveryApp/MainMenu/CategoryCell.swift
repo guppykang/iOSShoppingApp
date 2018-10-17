@@ -31,17 +31,36 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
         return collectionView
     }()
     
+    let dividerLineView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let categoryLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Useless"
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     func setupViews() {
         backgroundColor = UIColor.clear
         addSubview(appsCollectionView)
+        addSubview(dividerLineView)
+        addSubview(categoryLabel)
         
         appsCollectionView.dataSource = self
         appsCollectionView.delegate = self
         
         appsCollectionView.register(AppCell.self, forCellWithReuseIdentifier: cellId)
         
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-14-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": categoryLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-14-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": dividerLineView]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": appsCollectionView]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": appsCollectionView]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v3(30)][v0][v1(0.5)]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": appsCollectionView, "v1": dividerLineView, "v3": categoryLabel]))
         
     }
     
@@ -56,7 +75,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         //creates the cells to be the length and height of the entire view
-        return CGSize(width: 100, height: frame.height)
+        return CGSize(width: 100, height: frame.height-32)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
