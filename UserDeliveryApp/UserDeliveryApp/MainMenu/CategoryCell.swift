@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, UICollectionViewDelegate {
     
@@ -40,11 +43,13 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     let categoryLabel : UILabel = {
         let label = UILabel()
-        label.text = "Useless"
+        //label.text = "Useless"
         label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    var items : [Item] = []
     
     func setupViews() {
         backgroundColor = UIColor.clear
@@ -70,6 +75,8 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppCell
+        cell.imageView.image = UIImage(named: "JianYang")
+        cell.nameLabel.text = "Jian Yang"
         return cell
     }
     
@@ -86,8 +93,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
 
 class AppCell : UICollectionViewCell {
     let imageView : UIImageView = {
-       let iv = UIImageView()
-        iv.image = UIImage(named: "JianYang")
+        let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.layer.cornerRadius = 16
         iv.layer.masksToBounds = true
@@ -96,7 +102,6 @@ class AppCell : UICollectionViewCell {
     
     let nameLabel : UILabel = {
        let label = UILabel()
-        label.text = "Jian Yang"
         label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
