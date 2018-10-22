@@ -14,7 +14,7 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
 
     //Create a dictionary that encodes a string to an array of items
     var categories : [String] = []
-    var itemsSeparatedByCategory : [String : [Item]] = [:]
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,30 +31,19 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
             self.categories.append(snapshot.key)
             print("number of children: \(snapshot.childrenCount)")
             
-            var items : [Item] = []
             
+            print(self.categories)
             
-            let enumerator = snapshot.children
-            //Get the URL of the items, get the item's information, create the Item, and add the item to the array
-            while let item = enumerator.nextObject() as? DataSnapshot {
-                let reference = Database.database().reference(fromURL: (item.value as? String)!)
-                reference.observeSingleEvent(of: .value, with: { snapshot in
-                    print(snapshot)
-                    //Create the init for Item, and feed this data in
-                    //figure out how to sync this data after it is finished
-                })
-
-            }
-            
-            //add the new Category's items to the dictionary
-            self.itemsSeparatedByCategory.updateValue(items, forKey: snapshot.key)
             
             DispatchQueue.main.async(execute: {
                 self.collectionView.reloadData()
+                
             })
+            
             
         }, withCancel: nil)
     }
+    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return categories.count
@@ -66,7 +55,8 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         cell.categoryLabel.text = categories[indexPath.item]
         
         //set the cell's items to the array of items of which it corresponds to its category
-        cell.items = itemsSeparatedByCategory[categories[indexPath.item]]!
+       
+
         return cell
     }
 

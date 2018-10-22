@@ -15,13 +15,45 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     fileprivate let cellId = "appCellId"
 
+    //all the items in this specific category
+    var items : [Item] = []
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupItems()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupItems() {
+        Database.database().reference().child("HomeFeatured").child("Most Popular").observeSingleEvent(of: .value) { (snapshot) in
+            let enumerator = snapshot.children
+            //Get the URL of the items, get the item's information, create the Item, and add the item to the array
+            while let item = enumerator.nextObject() as? DataSnapshot {
+                let reference = Database.database().reference(fromURL: (item.value as? String)!)
+                
+                reference.observeSingleEvent(of: .value, with: { currentItem in
+                    if let dictionary = currentItem.value as? [String: AnyObject] {
+                        
+                        let itemToAdd = Item(dictionary: dictionary)
+                        self.items.append(itemToAdd)
+                    }
+                    
+                    DispatchQueue.main.async(execute: {
+                        self.appsCollectionView.reloadData()
+                        
+                    })
+                })
+                
+            }
+            
+        }
+        
+
     }
     
     let appsCollectionView: UICollectionView = {
@@ -43,13 +75,12 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     let categoryLabel : UILabel = {
         let label = UILabel()
-        //label.text = "Useless"
+        label.text = "Most Popular"
         label.font = UIFont.systemFont(ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    var items : [Item] = []
     
     func setupViews() {
         backgroundColor = UIColor.clear
@@ -69,14 +100,19 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
         
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        print(items.count)
+        return items.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppCell
         cell.imageView.image = UIImage(named: "JianYang")
-        cell.nameLabel.text = "Jian Yang"
+        //cell.nameLabel.text = "Jian Yang"
+        
+        cell.nameLabel.text = self.items[indexPath.item].name
+    
         return cell
     }
     
