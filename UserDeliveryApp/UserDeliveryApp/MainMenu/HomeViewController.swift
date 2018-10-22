@@ -53,7 +53,7 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! CategoryCell
         //set the Category Label with the key of the dictionary, and set the array to the value of the dictionary
         cell.categoryLabel.text = categories[indexPath.item]
-        
+        cell.categoryName = categories[indexPath.item]
         //set the cell's items to the array of items of which it corresponds to its category
        
 

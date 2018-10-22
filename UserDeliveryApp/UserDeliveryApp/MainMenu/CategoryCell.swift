@@ -22,39 +22,42 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        setupItems()
+        //setupItems()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupItems() {
-        Database.database().reference().child("HomeFeatured").child("Most Popular").observeSingleEvent(of: .value) { (snapshot) in
-            let enumerator = snapshot.children
-            //Get the URL of the items, get the item's information, create the Item, and add the item to the array
-            while let item = enumerator.nextObject() as? DataSnapshot {
-                let reference = Database.database().reference(fromURL: (item.value as? String)!)
-                
-                reference.observeSingleEvent(of: .value, with: { currentItem in
-                    if let dictionary = currentItem.value as? [String: AnyObject] {
-                        
-                        let itemToAdd = Item(dictionary: dictionary)
-                        self.items.append(itemToAdd)
-                    }
+    //func setupItems() {
+    var categoryName : String? {
+        didSet {
+            Database.database().reference().child("HomeFeatured").child(categoryName!).observeSingleEvent(of: .value) { (snapshot) in
+                let enumerator = snapshot.children
+                //Get the URL of the items, get the item's information, create the Item, and add the item to the array
+                while let item = enumerator.nextObject() as? DataSnapshot {
+                    let reference = Database.database().reference(fromURL: (item.value as? String)!)
                     
-                    DispatchQueue.main.async(execute: {
-                        self.appsCollectionView.reloadData()
+                    reference.observeSingleEvent(of: .value, with: { currentItem in
+                        if let dictionary = currentItem.value as? [String: AnyObject] {
+                            
+                            let itemToAdd = Item(dictionary: dictionary)
+                            self.items.append(itemToAdd)
+                        }
                         
+                        DispatchQueue.main.async(execute: {
+                            self.appsCollectionView.reloadData()
+                            
+                        })
                     })
-                })
+                    
+                }
                 
             }
-            
         }
-        
-
     }
+
+   // }
     
     let appsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
