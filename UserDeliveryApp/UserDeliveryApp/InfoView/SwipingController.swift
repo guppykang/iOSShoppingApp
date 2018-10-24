@@ -64,10 +64,16 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
         /*let vc = HomeViewController()
         self.present(vc, animated: true, completion: nil)*/
         
+        /*let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let homeViewController = HomeViewController(collectionViewLayout : layout)
+        self.present(homeViewController, animated: true, completion: nil) */
+        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let homeViewController = HomeViewController(collectionViewLayout : layout)
-        self.present(homeViewController, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: homeViewController)
+        self.present(navigationController, animated: true, completion: nil)
     }
     
     @objc private func handleNext() {

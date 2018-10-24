@@ -18,6 +18,9 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     //all the items in this specific category
     var items : [Item] = []
     
+    var homeViewController: HomeViewController?
+    
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,7 +32,8 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
         fatalError("init(coder:) has not been implemented")
     }
     
-    //func setupItems() {
+    
+    //when we set the category name, it gets all the items from that category and puts them in an array
     var categoryName : String? {
         didSet {
             Database.database().reference().child("HomeFeatured").child(categoryName!).observeSingleEvent(of: .value) { (snapshot) in
@@ -57,7 +61,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
         }
     }
 
-   // }
     
     let appsCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -127,6 +130,11 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14 )
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("item selected : \(String(describing: items[indexPath.item].name))")
+        homeViewController?.showAppDetailForApp(items[indexPath.item])
+    }
 }
 
 
@@ -179,7 +187,7 @@ class AppCell : UICollectionViewCell {
         
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.width)
         nameLabel.frame = CGRect(x: 0, y: frame.width + 2, width: frame.width, height: 40)
-        categoryLabel.frame = CGRect(x: 0, y: frame.width + 38, width: frame.width, height: 20)
+        categoryLabel.frame = CGRect(x: 0, y: frame.width + 38, width: frame.width, height: 20)  //TODO : CHANGE THIS DEPENDING WHETHER OR NOT THE TITLE IS MORE THAN TWO LINES OR NOT
         priceLabel.frame = CGRect(x: 0, y: frame.width + 58, width: frame.width, height: 20)
     }
 

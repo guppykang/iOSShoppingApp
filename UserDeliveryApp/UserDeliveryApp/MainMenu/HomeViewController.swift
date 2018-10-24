@@ -20,6 +20,8 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: "cellId")
+        
+        navigationItem.title = "Home"
         // Do any additional setup after loading the view.
         getUserInfo()
     }
@@ -54,6 +56,7 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         //set the Category Label with the key of the dictionary, and set the array to the value of the dictionary
         cell.categoryLabel.text = categories[indexPath.item]
         cell.categoryName = categories[indexPath.item]
+        cell.homeViewController = self
         //set the cell's items to the array of items of which it corresponds to its category
        
 
@@ -63,6 +66,15 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         //creates the cells to be the length and height of the entire view
         return CGSize(width: view.frame.width, height: 225)
+    }
+    
+    func showAppDetailForApp(_ item: Item) {
+        print("inside the segue func")
+        let layout = UICollectionViewFlowLayout()
+        let appDetailController = ItemDetailController(collectionViewLayout: layout)
+        appDetailController.item = item
+        //self.present(appDetailController, animated: true, completion: nil)
+        navigationController?.pushViewController(appDetailController, animated: true)
     }
 
 }
