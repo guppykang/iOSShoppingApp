@@ -118,6 +118,8 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
         //cell.nameLabel.text = "Jian Yang"
         
         cell.nameLabel.text = self.items[indexPath.item].name
+        cell.categoryLabel.text = categoryName
+        cell.priceLabel.text = "$\(self.items[indexPath.item].price!)"
     
         return cell
     }
@@ -155,7 +157,6 @@ class AppCell : UICollectionViewCell {
     
     let categoryLabel : UILabel = {
         let label = UILabel()
-        label.text = "Other"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .darkGray
         return label
@@ -163,7 +164,6 @@ class AppCell : UICollectionViewCell {
     
     let priceLabel : UILabel = {
         let label = UILabel()
-        label.text = "$99.99"
         label.font = UIFont.systemFont(ofSize: 13)
         label.textColor = .darkGray
         return label

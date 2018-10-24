@@ -14,6 +14,7 @@ class Item: NSObject {
     var name : String?
     var price : String?
     
+    
     init(dictionary: [String: Any]) {
         self.descrip = dictionary["Description"] as? String
         self.imageURL = dictionary["ImageUrl"] as? String
