@@ -130,10 +130,40 @@ class RegisterViewController: UIViewController {
         }//end auth
     }
     
+    let signInLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Already have an account?"
+        
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    let backToSignInButton : UIButton = {
+        let button = UIButton(type: .system)
+        
+        button.setTitle("Sign In", for: .normal)
+        button.setTitleColor(.blue, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        
+        button.addTarget(self, action: #selector(handleBackToSignIn), for: .touchUpInside)
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    @objc func handleBackToSignIn() {
+        let vc = AuthenticationMenuViewController()
+        let navigationController = UINavigationController(rootViewController: vc)
+        self.present(navigationController, animated: true, completion: nil)
+    }
     func setupLayout() {
         view.addSubview(titleLabel)
         view.addSubview(registerButton)
         view.addSubview(inputContainterView)
+        view.addSubview(signInLabel)
+        view.addSubview(backToSignInButton)
         
         
         //title Label
@@ -182,6 +212,11 @@ class RegisterViewController: UIViewController {
         registerButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10).isActive = true
         registerButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -50).isActive = true
         
+        signInLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        signInLabel.topAnchor.constraint(equalTo: registerButton.bottomAnchor, constant: 400).isActive = true
+        
+        backToSignInButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        backToSignInButton.topAnchor.constraint(equalTo: signInLabel.bottomAnchor, constant: 5).isActive = true
         
         
     }
@@ -189,7 +224,7 @@ class RegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .yellow
+        view.backgroundColor = .white
         
         setupLayout()
 

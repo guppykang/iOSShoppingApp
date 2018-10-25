@@ -8,6 +8,8 @@
 
 import UIKit
 
+import Firebase
+
 class SwipingController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     
@@ -60,20 +62,28 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
     
     
     @objc private func handleFinish() {
-        print("segue to the sign up page")
-        /*let vc = HomeViewController()
-        self.present(vc, animated: true, completion: nil)*/
+        if Auth.auth().currentUser != nil {
+            
+            let mainPage = CustomTabBarController()
+            self.present(mainPage, animated: true, completion: nil)
+            
+        }
         
+        print("segue to the sign up page")
+        let vc = AuthenticationMenuViewController()
+        let navigationController = UINavigationController(rootViewController: vc)
+        self.present(navigationController, animated: true, completion: nil)
+    
         /*let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let homeViewController = HomeViewController(collectionViewLayout : layout)
         self.present(homeViewController, animated: true, completion: nil) */
         
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let homeViewController = HomeViewController(collectionViewLayout : layout)
-        let navigationController = UINavigationController(rootViewController: homeViewController)
-        self.present(navigationController, animated: true, completion: nil)
+//        let layout = UICollectionViewFlowLayout()
+//        layout.scrollDirection = .vertical
+//        let homeViewController = AuthenticationMenuViewController(collectionViewLayout : layout)
+//        let navigationController = UINavigationController(rootViewController: homeViewController)
+//        self.present(navigationController, animated: true, completion: nil)
     }
     
     @objc private func handleNext() {

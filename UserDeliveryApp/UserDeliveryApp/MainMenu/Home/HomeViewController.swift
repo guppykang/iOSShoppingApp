@@ -24,6 +24,8 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
         navigationItem.title = "Home"
         // Do any additional setup after loading the view.
         getUserInfo()
+        
+        
     }
     
     func getUserInfo() {

@@ -87,11 +87,8 @@ class AuthenticationMenuViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
             }
             else {
-                let layout = UICollectionViewFlowLayout()
-                layout.scrollDirection = .vertical
-                let homeViewController = HomeViewController(collectionViewLayout : layout)
-                let navigationController = UINavigationController(rootViewController: homeViewController)
-                self.present(navigationController, animated: true, completion: nil)
+                let mainPage = CustomTabBarController()
+                self.present(mainPage, animated: true, completion: nil)
                 
                 print("Successful Login")
                 
@@ -165,17 +162,27 @@ class AuthenticationMenuViewController: UIViewController {
        
         
     }
-    
-    
-    
-    
     override func viewDidLoad() {
+        
+        
         super.viewDidLoad()
+        
+        navigationItem.title = "Sign In"
+        if Auth.auth().currentUser != nil {
+            
+            let mainPage = CustomTabBarController()
+            self.present(mainPage, animated: true, completion: nil)
+            
+        }
         
         view.backgroundColor = .white
         setupLayout()
         
+       
+        
     }
+    
+    
     
 
     
