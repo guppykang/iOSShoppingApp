@@ -114,10 +114,10 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppCell
-        cell.imageView.image = UIImage(named: "JianYang")
+        //cell.imageView.image = UIImage(named: "JianYang")
         //cell.nameLabel.text = "Jian Yang"
-        
-        cell.nameLabel.text = self.items[indexPath.item].name
+        cell.imageView.loadImageUsingCacheWithUrlString(items[indexPath.item].imageURL!)
+        cell.nameLabel.text = items[indexPath.item].name
         cell.categoryLabel.text = categoryName
         cell.priceLabel.text = "$\(self.items[indexPath.item].price!)"
     
