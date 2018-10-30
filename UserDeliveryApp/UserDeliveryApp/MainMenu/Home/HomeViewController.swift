@@ -72,8 +72,9 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     func showAppDetailForApp(_ item: Item) {
         print("inside the segue func")
-        let layout = UICollectionViewFlowLayout()
-        let appDetailController = ItemDetailController(collectionViewLayout: layout)
+        //let layout = UICollectionViewFlowLayout()
+        //let appDetailController = ItemDetailController(collectionViewLayout: layout)
+        let appDetailController = ItemDetailController()
         appDetailController.item = item
         //self.present(appDetailController, animated: true, completion: nil)
         navigationController?.pushViewController(appDetailController, animated: true)

@@ -46,6 +46,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
                         if let dictionary = currentItem.value as? [String: AnyObject] {
                             
                             let itemToAdd = Item(dictionary: dictionary)
+                            itemToAdd.path = (item.value as? String)!
                             self.items.append(itemToAdd)
                         }
                         

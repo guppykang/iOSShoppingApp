@@ -13,6 +13,7 @@ class Item: NSObject {
     var imageURL : String?
     var name : String?
     var price : String?
+    var path : String?
     
     
     init(dictionary: [String: Any]) {
