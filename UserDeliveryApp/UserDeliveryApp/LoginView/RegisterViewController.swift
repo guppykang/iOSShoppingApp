@@ -117,16 +117,28 @@ class RegisterViewController: UIViewController {
             //TODO : Store user encryped version of the user password
             let newUserValues = ["name" : name, "phone number" : phoneNumber, "email" : email]
             
+            //creating the initial first order for the user
+            reference.child("ActiveOrders").child(uid).child("1").child("Time").setValue("TBD")
+            let currentOrderPath = reference.child("ActiveOrders").child(uid).child("1").url
+
+            //add the order to the currentOrder
+            userReference.child("CurrentOrder").child("1").setValue(currentOrderPath)
+            
+            //add the order to the NewOrders
+            userReference.child("NewOrders").child("1").setValue(currentOrderPath)
+            
             userReference.updateChildValues(newUserValues, withCompletionBlock: {(newChildError, ref) in
                 if (newChildError != nil){
                     print ("Error \(String(describing: newChildError))")
                     return
                 }
                 
-                let vc = HomeViewController()
-                self.present(vc, animated: true, completion: nil)
-                print("Succesfully saved user to the database")
+                let mainPage = CustomTabBarController()
+                self.present(mainPage, animated: true, completion: nil)
+                
+                print("Successful Register")
             }  )
+            
         }//end auth
     }
     

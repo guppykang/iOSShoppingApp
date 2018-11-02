@@ -47,6 +47,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
                             
                             let itemToAdd = Item(dictionary: dictionary)
                             itemToAdd.path = (item.value as? String)!
+                            itemToAdd.serialNumber = (currentItem.key as? String)!
                             self.items.append(itemToAdd)
                         }
                         

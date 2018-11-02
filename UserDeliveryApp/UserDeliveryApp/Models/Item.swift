@@ -14,6 +14,8 @@ class Item: NSObject {
     var name : String?
     var price : String?
     var path : String?
+    var serialNumber : String?
+    
     
     
     init(dictionary: [String: Any]) {

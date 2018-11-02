@@ -60,7 +60,34 @@ class ItemDetailController: UIViewController {
 
     @objc func handleAddToCart() {
         print("add this item to the cart")
-        Database.database().reference().child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").setValue(["item" : (item?.path)!])
+        let ref = Database.database().reference()
+        
+
+        
+        ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.hasChild((self.item?.serialNumber)!) {
+                print("item already exists")
+                
+                let child = snapshot.childSnapshot(forPath: (self.item?.serialNumber)!)
+                let quantitySnapshot = child.childSnapshot(forPath: "Quantity")
+                
+                var currentQuantity = (quantitySnapshot.value as? Int)!
+                currentQuantity += 1
+                
+                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(currentQuantity)
+
+                
+            }
+            else {
+                print("Child doesn't exist")
+                //create the item for the first time in the cart
+                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Item").setValue(self.item?.path)
+                //create the count for that item
+                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(1)
+            }
+            
+        })
+        
         
     }
 
