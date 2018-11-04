@@ -59,36 +59,86 @@ class ItemDetailController: UIViewController {
     }()
 
     @objc func handleAddToCart() {
-        print("add this item to the cart")
-        let ref = Database.database().reference()
-        
-
-        
-        ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").observeSingleEvent(of: .value, with: { (snapshot) in
-            if snapshot.hasChild((self.item?.serialNumber)!) {
-                print("item already exists")
-                
-                let child = snapshot.childSnapshot(forPath: (self.item?.serialNumber)!)
-                let quantitySnapshot = child.childSnapshot(forPath: "Quantity")
-                
-                var currentQuantity = (quantitySnapshot.value as? Int)!
-                currentQuantity += 1
-                
-                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(currentQuantity)
-
-                
-            }
-            else {
-                print("Child doesn't exist")
-                //create the item for the first time in the cart
-                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Item").setValue(self.item?.path)
-                //create the count for that item
-                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(1)
-            }
+        getCurrentOrderNumber { (result) in
             
+            print(result)
+            let ref = Database.database().reference()
+            
+            ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child(result).observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                
+                if snapshot.hasChild((self.item?.serialNumber)!) {
+                    let child = snapshot.childSnapshot(forPath: (self.item?.serialNumber)!)
+                    let quantitySnapshot = child.childSnapshot(forPath: "Quantity")
+                    
+                    
+                    var currentQuantity = (quantitySnapshot.value as? Int)!
+                    currentQuantity += 1
+                    
+                    ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child(result).child((self.item?.serialNumber)!).child("Quantity").setValue(currentQuantity)
+                    
+                    
+                }
+                else {
+                    //create the item for the first time in the cart
+                    ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child(result).child((self.item?.serialNumber)!).child("Item").setValue(self.item?.path)
+                    //create the count for that item
+                    ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child(result).child((self.item?.serialNumber)!).child("Quantity").setValue(1)
+                }
+                
+            })
+            
+            print("done")
+        }
+//        let ref = Database.database().reference()
+//
+//        ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").observeSingleEvent(of: .value, with: { (snapshot) in
+//
+//
+//            if snapshot.hasChild((self.item?.serialNumber)!) {
+//                let child = snapshot.childSnapshot(forPath: (self.item?.serialNumber)!)
+//                let quantitySnapshot = child.childSnapshot(forPath: "Quantity")
+//
+//
+//                var currentQuantity = (quantitySnapshot.value as? Int)!
+//                currentQuantity += 1
+//
+//                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(currentQuantity)
+//
+//
+//            }
+//            else {
+//                //create the item for the first time in the cart
+//                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Item").setValue(self.item?.path)
+//                //create the count for that item
+//                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(1)
+//            }
+//
+//        })
+        
+        
+    }
+    
+    func getCurrentOrderNumberHelper(completion: @escaping (String) -> ()) {
+        var orderNumber = ""
+        
+        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").observeSingleEvent(of: .value, with: { (currentUserSnapshot) in
+            let enumerator = currentUserSnapshot.children
+            
+            let item = enumerator.nextObject() as? DataSnapshot
+            orderNumber = (item?.key)!
+            print("Order Number : \(orderNumber)")
+          
+            completion(orderNumber)
         })
-        
-        
+    }
+    
+    func getCurrentOrderNumber(completion: @escaping (String) -> ()) {
+        DispatchQueue.main.async {
+            self.getCurrentOrderNumberHelper(completion: { (result) in
+                completion(result)
+            })
+        }
     }
 
     override func viewDidLoad() {
