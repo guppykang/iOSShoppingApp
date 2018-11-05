@@ -10,6 +10,10 @@ import UIKit
 
 class CustomTabBarController: UITabBarController {
 
+    let navBar : UINavigationBar = {
+        let bar = UINavigationBar()
+        return bar
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
 

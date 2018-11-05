@@ -41,7 +41,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
                 //Get the URL of the items, get the item's information, create the Item, and add the item to the array
                 while let item = enumerator.nextObject() as? DataSnapshot {
                     let reference = Database.database().reference(fromURL: (item.value as? String)!)
-                    
                     reference.observeSingleEvent(of: .value, with: { currentItem in
                         if let dictionary = currentItem.value as? [String: AnyObject] {
                             
@@ -185,7 +184,6 @@ class AppCell : UICollectionViewCell {
         addSubview(nameLabel)
         addSubview(categoryLabel)
         addSubview(priceLabel)
-        
         
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.width)
         nameLabel.frame = CGRect(x: 0, y: frame.width + 2, width: frame.width, height: 40)

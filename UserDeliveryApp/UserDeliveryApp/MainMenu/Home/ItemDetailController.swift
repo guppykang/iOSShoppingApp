@@ -43,6 +43,15 @@ class ItemDetailController: UIViewController {
 
         return label
     }()
+    
+    let descriptionLabel : UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
 
     let addToCart : UIButton = {
         let button = UIButton(type: .system)
@@ -90,31 +99,6 @@ class ItemDetailController: UIViewController {
             
             print("done")
         }
-//        let ref = Database.database().reference()
-//
-//        ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").observeSingleEvent(of: .value, with: { (snapshot) in
-//
-//
-//            if snapshot.hasChild((self.item?.serialNumber)!) {
-//                let child = snapshot.childSnapshot(forPath: (self.item?.serialNumber)!)
-//                let quantitySnapshot = child.childSnapshot(forPath: "Quantity")
-//
-//
-//                var currentQuantity = (quantitySnapshot.value as? Int)!
-//                currentQuantity += 1
-//
-//                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(currentQuantity)
-//
-//
-//            }
-//            else {
-//                //create the item for the first time in the cart
-//                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Item").setValue(self.item?.path)
-//                //create the count for that item
-//                ref.child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child("Order1").child((self.item?.serialNumber)!).child("Quantity").setValue(1)
-//            }
-//
-//        })
         
         
     }
@@ -152,6 +136,8 @@ class ItemDetailController: UIViewController {
         itemName.text = item?.name!
         price.text = item?.price!
         
+        descriptionLabel.text = item?.descrip!
+        
         setupViews()
     }
     
@@ -161,6 +147,7 @@ class ItemDetailController: UIViewController {
         view.addSubview(itemName)
         view.addSubview(price)
         view.addSubview(addToCart)
+        view.addSubview(descriptionLabel)
         
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
@@ -172,7 +159,10 @@ class ItemDetailController: UIViewController {
         price.topAnchor.constraint(equalTo: itemName.bottomAnchor).isActive = true
         price.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
-        addToCart.topAnchor.constraint(equalTo: price.bottomAnchor).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: price.bottomAnchor).isActive = true
+        descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        addToCart.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor).isActive = true
         addToCart.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
     }

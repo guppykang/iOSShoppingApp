@@ -25,6 +25,7 @@
 		0D513B3821802C400001F43D /* ItemDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3721802C400001F43D /* ItemDetailController.swift */; };
 		0D513B3A21818BF30001F43D /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3921818BF30001F43D /* CustomTabBarController.swift */; };
 		0D513B3E218191A40001F43D /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3D218191A40001F43D /* AccountViewController.swift */; };
+		0DE6398A219014C60096498B /* CartCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE63989219014C60096498B /* CartCollectionViewController.swift */; };
 		2F45A25D59ADFEED684A7BBC /* Pods_UserDeliveryApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 560A19FDA58A3C7035F658A5 /* Pods_UserDeliveryApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		0D513B3721802C400001F43D /* ItemDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailController.swift; sourceTree = "<group>"; };
 		0D513B3921818BF30001F43D /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		0D513B3D218191A40001F43D /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		0DE63989219014C60096498B /* CartCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCollectionViewController.swift; sourceTree = "<group>"; };
 		560A19FDA58A3C7035F658A5 /* Pods_UserDeliveryApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UserDeliveryApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74B06953A4C265CA13AA7C4F /* Pods-UserDeliveryApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserDeliveryApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UserDeliveryApp/Pods-UserDeliveryApp.debug.xcconfig"; sourceTree = "<group>"; };
 		8259475E55FE2CABA2BDAAA1 /* Pods-UserDeliveryApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserDeliveryApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-UserDeliveryApp/Pods-UserDeliveryApp.release.xcconfig"; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				0D513B3921818BF30001F43D /* CustomTabBarController.swift */,
+				0DE63984218FF4B60096498B /* Cart */,
 				0D513B3C2181917B0001F43D /* Account */,
 				0D513B3B218191620001F43D /* Home */,
 			);
@@ -164,6 +167,14 @@
 				0D513B3D218191A40001F43D /* AccountViewController.swift */,
 			);
 			path = Account;
+			sourceTree = "<group>";
+		};
+		0DE63984218FF4B60096498B /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				0DE63989219014C60096498B /* CartCollectionViewController.swift */,
+			);
+			path = Cart;
 			sourceTree = "<group>";
 		};
 		9800C7F4D235613B20130F9D /* Pods */ = {
@@ -315,6 +326,7 @@
 				0D513B3E218191A40001F43D /* AccountViewController.swift in Sources */,
 				0D040AE7216DB41F00F8F8D0 /* InfoViewController.swift in Sources */,
 				0D040B052171D15D00F8F8D0 /* RegisterViewController.swift in Sources */,
+				0DE6398A219014C60096498B /* CartCollectionViewController.swift in Sources */,
 				0D040B08217461C400F8F8D0 /* HomeViewController.swift in Sources */,
 				0D040AF9216DD29100F8F8D0 /* SwipingController.swift in Sources */,
 				0D040B1021799D8F00F8F8D0 /* Item.swift in Sources */,

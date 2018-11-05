@@ -16,17 +16,33 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     var categories : [String] = []
     
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: "cellId")
         
         navigationItem.title = "Home"
+        let image = UIImage(named: "Cart")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleViewCart))
+        
         // Do any additional setup after loading the view.
         getUserInfo()
         
         
     }
+    
+    @objc func handleViewCart() {
+        print("hi mom")
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let cartViewController = CartCollectionViewController(collectionViewLayout : layout)
+        
+        
+        navigationController?.pushViewController(cartViewController, animated: true)
+    }
+    
     
     func getUserInfo() {
         Database.database().reference().child("HomeFeatured").observe(.childAdded, with: { (snapshot) in
