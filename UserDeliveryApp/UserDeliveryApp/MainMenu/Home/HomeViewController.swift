@@ -34,11 +34,9 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     @objc func handleViewCart() {
-        print("hi mom")
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let cartViewController = CartCollectionViewController(collectionViewLayout : layout)
-        
         
         navigationController?.pushViewController(cartViewController, animated: true)
     }
@@ -47,9 +45,7 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
     func getUserInfo() {
         Database.database().reference().child("HomeFeatured").observe(.childAdded, with: { (snapshot) in
             
-            print("Category name: \(snapshot.key)")
             self.categories.append(snapshot.key)
-            print("number of children: \(snapshot.childrenCount)")
             
             
             print(self.categories)

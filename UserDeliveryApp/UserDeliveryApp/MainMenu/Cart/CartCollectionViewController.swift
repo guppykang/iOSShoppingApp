@@ -31,6 +31,11 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     
     @objc func handleCheckout() {
         print("hi dad ")
+        
+        let vc = CheckoutViewController()
+        let homeView = HomeViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        
     }
     
     let nameLabel : UILabel = {
@@ -42,6 +47,120 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
+    }()
+    
+    
+    
+    
+    
+    let doneButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Done", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.setTitleColor(.green, for: .normal)
+        
+        button.addTarget(self, action: #selector(handleDone), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    @objc func handlePlus(sender: UIButton) {
+       
+        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").observeSingleEvent(of: .value) { (snapshot) in
+            let enumerator = snapshot.children
+            //Get the URL of the items, get the item's information, create the Item, and add the item to the array
+            
+            let cartSnapshot = enumerator.nextObject() as? DataSnapshot
+            
+            let orderReference = Database.database().reference(fromURL: (cartSnapshot?.value as? String)!)
+            var newQuantity = Int(self.quantities[sender.tag])!
+            newQuantity += 1
+            
+            orderReference.child(self.cart[sender.tag].serialNumber!).child("Quantity").setValue(newQuantity)
+            
+            
+        }
+        
+        getCartItems()
+        
+        //has to compare to 2 sine async will do this first
+        if Int(quantities[sender.tag])!  == 1 {
+            minusItemButton.isHidden = false
+            deleteItemButton.isHidden = true
+        }
+        
+    }
+
+    
+    
+    @objc func handleMinus(sender: UIButton) {
+        
+        //oops
+        //MAJOR TODO : should have first decremented the quantity in quantites to reduce lag...
+        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").observeSingleEvent(of: .value) { (snapshot) in
+            let enumerator = snapshot.children
+            //Get the URL of the items, get the item's information, create the Item, and add the item to the array
+            
+            let cartSnapshot = enumerator.nextObject() as? DataSnapshot
+            
+            let orderReference = Database.database().reference(fromURL: (cartSnapshot?.value as? String)!)
+            var newQuantity = Int(self.quantities[sender.tag])!
+            newQuantity -= 1
+            
+            orderReference.child(self.cart[sender.tag].serialNumber!).child("Quantity").setValue(newQuantity)
+            
+            
+        }
+        
+        getCartItems()
+        
+        //has to compare to 2 sine async will do this first
+        if Int(quantities[sender.tag])!  == 2 {
+            minusItemButton.isHidden = true
+            deleteItemButton.isHidden = false
+        }
+        
+        
+    }
+    
+    @objc func handleDelete(sender: UIButton) {
+        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").observeSingleEvent(of: .value) { (snapshot) in
+            let enumerator = snapshot.children
+            //Get the URL of the items, get the item's information, create the Item, and add the item to the array
+            
+            let cartSnapshot = enumerator.nextObject() as? DataSnapshot
+            
+            let orderReference = Database.database().reference(fromURL: (cartSnapshot?.value as? String)!)
+           
+            
+            orderReference.child(self.cart[sender.tag].serialNumber!).removeValue()
+            
+            
+        }
+        
+        getCartItems()
+        
+        //refresh the bottombar to correct buttons
+        bottomControlsStackView.isHidden = true
+        checkoutButton.isHidden = false
+    }
+    
+    @objc func handleDone() {
+        bottomControlsStackView.isHidden = true
+        checkoutButton.isHidden = false
+    }
+    
+    
+    var bottomControlsStackView : UIStackView!
+    
+    let plusItemButton : UIButton = {
+        let button = UIButton(type: .system)
+        let image = UIImage(named: "Plus")
+        button.setImage(image, for: .normal)
+        
+        button.addTarget(self, action: #selector(handlePlus), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     let deleteItemButton : UIButton = {
@@ -64,38 +183,21 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         return button
     }()
     
-    let plusItemButton : UIButton = {
-        let button = UIButton(type: .system)
-        let image = UIImage(named: "Plus")
-        button.setImage(image, for: .normal)
-        
-        button.addTarget(self, action: #selector(handlePlus), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    let doneButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Done", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.green, for: .normal)
-        
-        button.addTarget(self, action: #selector(handleDone), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    
-    var bottomControlsStackView : UIStackView!
-    
     func setupChangeQuantityBottomControl(index : Int) {
+        
+        plusItemButton.tag = index
+        minusItemButton.tag = index
+        deleteItemButton.tag = index
+        
         bottomControlsStackView = UIStackView(arrangedSubviews: [nameLabel, deleteItemButton, minusItemButton, plusItemButton, doneButton])
         bottomControlsStackView.translatesAutoresizingMaskIntoConstraints = false
         
         if Int(quantities[index])! > 1 {
             deleteItemButton.isHidden = true
+            minusItemButton.isHidden = false
         }
         else {
+            deleteItemButton.isHidden = false
             minusItemButton.isHidden = true
         }
         
@@ -109,28 +211,22 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         
         
     }
-    @objc func handleDone() {
-        bottomControlsStackView.isHidden = true
-        checkoutButton.isHidden = false
-    }
     
-    @objc func handlePlus() {
-        print("handle plus")
-    }
-    @objc func handleMinus() {
-        print("handle minus")
-    }
     
-    @objc func handleDelete() {
-        print("handle delete")
-    }
+    
     
     
     
     func getCartItems() {
+        
+        
         Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").observeSingleEvent(of: .value) { (snapshot) in
+            self.cart = []
+            self.quantities = []
+            
             let enumerator = snapshot.children
             //Get the URL of the items, get the item's information, create the Item, and add the item to the array
+            
             
             let cartSnapshot = enumerator.nextObject() as? DataSnapshot
             
@@ -146,6 +242,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
                         let itemReference = Database.database().reference(fromURL: itemPath)
                         
                         let quantitySnapshot = item.childSnapshot(forPath: "Quantity")
+                        
                         let quantityInteger = (quantitySnapshot.value as? Int)!
                         let quantityOfItem  = String(quantityInteger)
                         self.quantities.append(quantityOfItem)
@@ -188,6 +285,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         super.viewDidLoad()
         collectionView.backgroundColor = .white
         
+        navigationItem.title = "Cart"
         getCartItems()
         
         setupViews()
@@ -203,7 +301,6 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ItemCell
-        print(cart[indexPath.item].name)
         cell.nameLabel.text = cart[indexPath.item].name
         cell.imageView.loadImageUsingCacheWithUrlString(cart[indexPath.item].imageURL!)
         cell.quantityLabel.text = "Quantity : \(quantities[indexPath.item])"

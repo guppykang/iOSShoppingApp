@@ -22,6 +22,7 @@
 		0D040B0A21746DB700F8F8D0 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B0921746DB700F8F8D0 /* CategoryCell.swift */; };
 		0D040B1021799D8F00F8F8D0 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B0F21799D8F00F8F8D0 /* Item.swift */; };
 		0D040B13217C257700F8F8D0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B12217C257700F8F8D0 /* Extensions.swift */; };
+		0D22AEB12192CD7E00B915EA /* CheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AEB02192CD7E00B915EA /* CheckoutViewController.swift */; };
 		0D513B3821802C400001F43D /* ItemDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3721802C400001F43D /* ItemDetailController.swift */; };
 		0D513B3A21818BF30001F43D /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3921818BF30001F43D /* CustomTabBarController.swift */; };
 		0D513B3E218191A40001F43D /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3D218191A40001F43D /* AccountViewController.swift */; };
@@ -47,6 +48,7 @@
 		0D040B0921746DB700F8F8D0 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		0D040B0F21799D8F00F8F8D0 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		0D040B12217C257700F8F8D0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0D22AEB02192CD7E00B915EA /* CheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutViewController.swift; sourceTree = "<group>"; };
 		0D513B3721802C400001F43D /* ItemDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailController.swift; sourceTree = "<group>"; };
 		0D513B3921818BF30001F43D /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		0D513B3D218191A40001F43D /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				0D513B3921818BF30001F43D /* CustomTabBarController.swift */,
+				0D22AEAF2192CD5A00B915EA /* Checkout */,
 				0DE63984218FF4B60096498B /* Cart */,
 				0D513B3C2181917B0001F43D /* Account */,
 				0D513B3B218191620001F43D /* Home */,
@@ -149,6 +152,14 @@
 				0D040B12217C257700F8F8D0 /* Extensions.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		0D22AEAF2192CD5A00B915EA /* Checkout */ = {
+			isa = PBXGroup;
+			children = (
+				0D22AEB02192CD7E00B915EA /* CheckoutViewController.swift */,
+			);
+			path = Checkout;
 			sourceTree = "<group>";
 		};
 		0D513B3B218191620001F43D /* Home */ = {
@@ -333,6 +344,7 @@
 				0D040B13217C257700F8F8D0 /* Extensions.swift in Sources */,
 				0D040AFB216DD8E600F8F8D0 /* PageCellCollectionViewCell.swift in Sources */,
 				0D040AE5216DB41F00F8F8D0 /* AppDelegate.swift in Sources */,
+				0D22AEB12192CD7E00B915EA /* CheckoutViewController.swift in Sources */,
 				0D513B3A21818BF30001F43D /* CustomTabBarController.swift in Sources */,
 				0D040B0A21746DB700F8F8D0 /* CategoryCell.swift in Sources */,
 				0D040AFD216F1AE200F8F8D0 /* Page.swift in Sources */,

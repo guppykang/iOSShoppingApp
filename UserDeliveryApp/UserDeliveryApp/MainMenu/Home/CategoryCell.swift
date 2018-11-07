@@ -109,7 +109,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(items.count)
         return items.count
     }
     
@@ -135,7 +134,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDelegateFlowLayout, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("item selected : \(String(describing: items[indexPath.item].name))")
         homeViewController?.showAppDetailForApp(items[indexPath.item])
     }
 }
