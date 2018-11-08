@@ -32,9 +32,11 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     @objc func handleCheckout() {
         print("hi dad ")
         
-        let vc = CheckoutViewController()
-        let homeView = HomeViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let checkoutViewController = CheckoutCollectionViewController(collectionViewLayout : layout)
+        
+        navigationController?.pushViewController(checkoutViewController, animated: true)
         
     }
     
@@ -63,6 +65,18 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    @objc func handleDone() {
+        print ("hi mom ")
+        UIView.animate(withDuration: 0.25) {
+            self.blackView.alpha = 0
+            if let window = UIApplication.shared.keyWindow {
+                self.subMenu.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 200)
+                
+            }
+            
+        }
+    }
     
     @objc func handlePlus(sender: UIButton) {
        
@@ -142,14 +156,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         
         //refresh the bottombar to correct buttons
         bottomControlsStackView.isHidden = true
-        checkoutButton.isHidden = false
     }
-    
-    @objc func handleDone() {
-        bottomControlsStackView.isHidden = true
-        checkoutButton.isHidden = false
-    }
-    
     
     var bottomControlsStackView : UIStackView!
     
@@ -183,7 +190,14 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         return button
     }()
     
+    let blackView = UIView()
+
+    let subMenu = UIView()
+    
+    
     func setupChangeQuantityBottomControl(index : Int) {
+
+        subMenu.backgroundColor = .white
         
         plusItemButton.tag = index
         minusItemButton.tag = index
@@ -204,17 +218,49 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         nameLabel.text = "            Item: \(String(index + 1))"
         bottomControlsStackView.distribution = .fillEqually
         
-        view.addSubview(bottomControlsStackView)
-        bottomControlsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -85).isActive = true
-        bottomControlsStackView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        bottomControlsStackView.heightAnchor.constraint(equalToConstant: 85).isActive = true
+        if let window = UIApplication.shared.keyWindow {
+            blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
+            blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
+            
+            window.addSubview(blackView)
+            subMenu.addSubview(bottomControlsStackView)
+            bottomControlsStackView.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
+            bottomControlsStackView.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
+            
+            
+            window.addSubview(subMenu)
+            
+            blackView.frame = window.frame
+            blackView.alpha = 0
+            
+            print(window.frame.height)
+            subMenu.frame = CGRect(x: 0, y: view.frame.height, width: window.frame.width, height: 200)
+            
+            
+            UIView.animate(withDuration: 0.25) {
+                self.blackView.alpha = 1
+                self.subMenu.frame = CGRect(x: 0, y: window.frame.height-160, width: window.frame.width, height: 75)
+            }
+        }
+        
+//        view.addSubview(bottomControlsStackView)
+//        bottomControlsStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -85).isActive = true
+//        bottomControlsStackView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+//        bottomControlsStackView.heightAnchor.constraint(equalToConstant: 85).isActive = true
         
         
     }
     
-    
-    
-    
+    @objc func handleDismiss() {
+        UIView.animate(withDuration: 0.25) {
+            self.blackView.alpha = 0
+            if let window = UIApplication.shared.keyWindow {
+                self.subMenu.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 200)
+                
+            }
+            
+        }
+    }
     
     
     func getCartItems() {
@@ -314,13 +360,13 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        checkoutButton.isHidden = true
         setupChangeQuantityBottomControl(index: indexPath.item)
     }
 
 }
 
 class ItemCell: UICollectionViewCell {
+    
     let imageView : UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
