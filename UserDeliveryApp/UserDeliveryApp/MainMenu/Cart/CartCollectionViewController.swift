@@ -222,13 +222,13 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
             blackView.backgroundColor = UIColor(white: 0, alpha: 0.5)
             blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
             
-            window.addSubview(blackView)
+            view.addSubview(blackView)
             subMenu.addSubview(bottomControlsStackView)
             bottomControlsStackView.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
             bottomControlsStackView.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
             
             
-            window.addSubview(subMenu)
+            view.addSubview(subMenu)
             
             blackView.frame = window.frame
             blackView.alpha = 0
@@ -239,7 +239,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
             
             UIView.animate(withDuration: 0.25) {
                 self.blackView.alpha = 1
-                self.subMenu.frame = CGRect(x: 0, y: window.frame.height-160, width: window.frame.width, height: 75)
+                self.subMenu.frame = CGRect(x: 0, y: window.frame.height-155, width: window.frame.width, height: 75)
             }
         }
         
