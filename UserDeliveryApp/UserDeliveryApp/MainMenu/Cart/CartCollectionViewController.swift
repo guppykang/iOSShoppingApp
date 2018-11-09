@@ -15,6 +15,8 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     private let cellId = "cellId"
     var cart : [Item] = []
     var quantities : [String] = []
+    var totalBalance : String = ""
+    
     
     
     let checkoutButton : UIButton = {
@@ -29,9 +31,17 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         
     }()
     
+    let totalOrderPrice : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 13)
+        return label
+    }()
+    
+    var bottomCheckoutBar : UIView!
+    
+    
+    
     @objc func handleCheckout() {
-        print("hi dad ")
-        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let checkoutViewController = CheckoutCollectionViewController(collectionViewLayout : layout)
@@ -65,6 +75,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     
     @objc func handleDone() {
         print ("hi mom ")
@@ -215,7 +226,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
             minusItemButton.isHidden = true
         }
         
-        nameLabel.text = "            Item: \(String(index + 1))"
+        nameLabel.text = "         Item: \(String(index + 1))"
         bottomControlsStackView.distribution = .fillEqually
         
         if let window = UIApplication.shared.keyWindow {
@@ -262,6 +273,18 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         }
     }
     
+    func getTotalOrderPrice() {
+        var total = 0.0
+        
+        for index in 0...(cart.count-1) {
+            let totalPrice = (Double(quantities[index]))! * (Double(cart[index].price!))!
+            total += totalPrice
+            
+        }
+        
+        totalBalance = String(format: "%.2f", total)
+        
+    }
     
     func getCartItems() {
         
@@ -302,7 +325,8 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
                                 
                                 DispatchQueue.main.async(execute: {
                                     self.cart.append(itemToAdd)
-
+                                    self.getTotalOrderPrice()
+                                    self.totalOrderPrice.text = "$\(self.totalBalance)"
                                     self.collectionView.reloadData()
                                     
                                 })
@@ -317,12 +341,30 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         }
     }
     
-    func setupViews(){
-        view.addSubview(checkoutButton)
+    func setupBottomCheckoutButton() {
+        bottomCheckoutBar = UIView()
+        bottomCheckoutBar.addSubview(totalOrderPrice)
+        bottomCheckoutBar.addSubview(checkoutButton)
         
-        checkoutButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -85).isActive = true
-        checkoutButton.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        checkoutButton.heightAnchor.constraint(equalToConstant: 85).isActive = true
+        bottomCheckoutBar.translatesAutoresizingMaskIntoConstraints = false
+        totalOrderPrice.translatesAutoresizingMaskIntoConstraints = false
+        checkoutButton.translatesAutoresizingMaskIntoConstraints = false
+
+        checkoutButton.centerXAnchor.constraint(equalTo: bottomCheckoutBar.centerXAnchor).isActive = true
+        checkoutButton.centerYAnchor.constraint(equalTo: bottomCheckoutBar.centerYAnchor).isActive = true
+        
+        totalOrderPrice.rightAnchor.constraint(equalTo: bottomCheckoutBar.rightAnchor, constant: -85).isActive = true
+        totalOrderPrice.centerYAnchor.constraint(equalTo: bottomCheckoutBar.centerYAnchor).isActive = true
+    }
+    
+    
+    func setupViews(){
+        setupBottomCheckoutButton()
+        view.addSubview(bottomCheckoutBar)
+        
+        bottomCheckoutBar.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -85).isActive = true
+        bottomCheckoutBar.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        bottomCheckoutBar.heightAnchor.constraint(equalToConstant: 85).isActive = true
         
     }
     
@@ -343,15 +385,31 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cart.count
+        
     }
+    
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ItemCell
-        cell.nameLabel.text = cart[indexPath.item].name
-        cell.imageView.loadImageUsingCacheWithUrlString(cart[indexPath.item].imageURL!)
-        cell.quantityLabel.text = "Quantity : \(quantities[indexPath.item])"
-        cell.priceLabel.text = cart[indexPath.item].price
-        cell.indexLabel.text = String(indexPath.item+1)
+
+        print(indexPath.item)
+        if indexPath.item != cart.count {
+            print("regular cell")
+            cell.nameLabel.text = cart[indexPath.item].name
+            cell.imageView.loadImageUsingCacheWithUrlString(cart[indexPath.item].imageURL!)
+            cell.quantityLabel.text = "Quantity : \(quantities[indexPath.item])"
+            cell.priceLabel.text = "$\((cart[indexPath.item].price)!)"
+            cell.indexLabel.text = String(indexPath.item+1)
+        
+            let totalPrice = (Double(quantities[indexPath.item]))! * (Double(cart[indexPath.item].price!))!
+            let rounded = String(format: "%.2f", totalPrice)
+            cell.totalPrice.text = "$\(rounded)"
+        
+            cell.arrow.image = UIImage(named: "Arrow")
+            
+            cell.dividerLineView.backgroundColor = .gray
+            
+        }
         return cell
     }
 
@@ -360,13 +418,26 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        setupChangeQuantityBottomControl(index: indexPath.item)
+        if indexPath.item != cart.count {
+            setupChangeQuantityBottomControl(index: indexPath.item)
+        }
+        else {
+            print("hi mom")
+        }
     }
 
 }
 
 class ItemCell: UICollectionViewCell {
     
+    override var isHighlighted: Bool {
+        didSet {
+            if isHighlighted {
+                backgroundColor = UIColor.init(white: 0, alpha: 0)
+
+            }
+        }
+    }
     let imageView : UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -378,6 +449,12 @@ class ItemCell: UICollectionViewCell {
     let nameLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    
+    let totalPrice : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 13)
         return label
     }()
     
@@ -397,7 +474,6 @@ class ItemCell: UICollectionViewCell {
     
     let dividerLineView : UIView = {
         let view = UIView()
-        view.backgroundColor = .gray
         return view
     }()
     
@@ -410,8 +486,7 @@ class ItemCell: UICollectionViewCell {
     }()
     
     let arrow : UIImageView = {
-        let image = UIImage(named: "Arrow")
-        let imageView = UIImageView(image: image)
+        let imageView = UIImageView()
         return imageView
     }()
     
@@ -440,6 +515,7 @@ class ItemCell: UICollectionViewCell {
         addSubview(priceLabel)
         addSubview(indexLabel)
         addSubview(arrow)
+        addSubview(totalPrice)
         
         indexLabel.translatesAutoresizingMaskIntoConstraints = false
         indexLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10).isActive = true
@@ -461,6 +537,10 @@ class ItemCell: UICollectionViewCell {
         quantityLabel.translatesAutoresizingMaskIntoConstraints = false
         quantityLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 10).isActive = true
         quantityLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 10).isActive = true
+        
+        totalPrice.translatesAutoresizingMaskIntoConstraints = false
+        totalPrice.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        totalPrice.rightAnchor.constraint(equalTo: arrow.leftAnchor, constant: -20).isActive = true
 
         arrow.translatesAutoresizingMaskIntoConstraints = false
         arrow.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true

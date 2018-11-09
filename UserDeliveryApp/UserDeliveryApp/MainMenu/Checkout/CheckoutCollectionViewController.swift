@@ -9,10 +9,24 @@
 import UIKit
 
 
-class CheckoutCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class CheckoutCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 3
+    }
+    
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        return
+//
+//    }
+//
 
     private let reuseIdentifier = "Cell"
     let blackView = UIView()
+    var addresses : [String] = []
     
     var subMenu: UIView = {
         let view = UIView()
@@ -20,25 +34,46 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
         return view
     }()
     
+    @objc func handleNewAddress() {
+        print("Hi mom")
+    }
+    
+    
+    func getAddresses() {
+        //get the address of the users
+    }
     func presentSubMenu(index : Int) {
         //the address cell
         if index == 0 {
             subMenu = UIView()
             subMenu.backgroundColor = .green
             
-            let selectedAddress : UILabel = {
-                let label = UILabel()
-                label.text = "731 Inverness Way, Sunnyvale CA, 94087"
+            getAddresses()
+            var pickerView = UIPickerView()
+            pickerView.translatesAutoresizingMaskIntoConstraints = false
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            
+            let newAddressButton : UIButton = {
+                let button = UIButton(type: .system)
+                button.setTitle("New", for: .normal)
+                button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+                button.setTitleColor(.black, for: .normal)
                 
-                label.translatesAutoresizingMaskIntoConstraints = false
-                return label
+                button.addTarget(self, action: #selector(handleNewAddress), for: .touchUpInside)
+                button.translatesAutoresizingMaskIntoConstraints = false
+                return button
             }()
             
             
-            subMenu.addSubview(selectedAddress)
+            subMenu.addSubview(newAddressButton)
+            subMenu.addSubview(pickerView)
             
-            selectedAddress.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
-            selectedAddress.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
+            pickerView.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
+            pickerView.topAnchor.constraint(equalTo: subMenu.topAnchor).isActive = true
+            
+            newAddressButton.rightAnchor.constraint(equalTo: subMenu.rightAnchor, constant: -20).isActive = true
+            newAddressButton.topAnchor.constraint(equalTo: subMenu.topAnchor, constant: 5).isActive = true
             
         }
         //This is the delivery time

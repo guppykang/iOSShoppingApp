@@ -47,10 +47,6 @@ class HomeViewController: UICollectionViewController, UICollectionViewDelegateFl
             
             self.categories.append(snapshot.key)
             
-            
-            print(self.categories)
-            
-            
             DispatchQueue.main.async(execute: {
                 self.collectionView.reloadData()
                 
