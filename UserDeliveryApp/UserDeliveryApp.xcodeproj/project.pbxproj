@@ -23,6 +23,7 @@
 		0D040B1021799D8F00F8F8D0 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B0F21799D8F00F8F8D0 /* Item.swift */; };
 		0D040B13217C257700F8F8D0 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D040B12217C257700F8F8D0 /* Extensions.swift */; };
 		0D22AEB321940C2600B915EA /* CheckoutCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AEB221940C2600B915EA /* CheckoutCollectionViewController.swift */; };
+		0D22AEB5219784A900B915EA /* NewAddressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D22AEB4219784A900B915EA /* NewAddressViewController.swift */; };
 		0D513B3821802C400001F43D /* ItemDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3721802C400001F43D /* ItemDetailController.swift */; };
 		0D513B3A21818BF30001F43D /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3921818BF30001F43D /* CustomTabBarController.swift */; };
 		0D513B3E218191A40001F43D /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D513B3D218191A40001F43D /* AccountViewController.swift */; };
@@ -49,6 +50,7 @@
 		0D040B0F21799D8F00F8F8D0 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		0D040B12217C257700F8F8D0 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0D22AEB221940C2600B915EA /* CheckoutCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutCollectionViewController.swift; sourceTree = "<group>"; };
+		0D22AEB4219784A900B915EA /* NewAddressViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddressViewController.swift; sourceTree = "<group>"; };
 		0D513B3721802C400001F43D /* ItemDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailController.swift; sourceTree = "<group>"; };
 		0D513B3921818BF30001F43D /* CustomTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		0D513B3D218191A40001F43D /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
@@ -97,8 +99,8 @@
 				0D040AFF2170772D00F8F8D0 /* LoginView */,
 				0D040AFE2170770400F8F8D0 /* InfoView */,
 				0D040AE4216DB41F00F8F8D0 /* AppDelegate.swift */,
-				0D040AE8216DB41F00F8F8D0 /* Main.storyboard */,
 				0D040AEB216DB42000F8F8D0 /* Assets.xcassets */,
+				0D040AE8216DB41F00F8F8D0 /* Main.storyboard */,
 				0D040AED216DB42000F8F8D0 /* LaunchScreen.storyboard */,
 				0D040AF0216DB42000F8F8D0 /* Info.plist */,
 				0D040AF6216DB4D800F8F8D0 /* GoogleService-Info.plist */,
@@ -158,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				0D22AEB221940C2600B915EA /* CheckoutCollectionViewController.swift */,
+				0D22AEB4219784A900B915EA /* NewAddressViewController.swift */,
 			);
 			path = Checkout;
 			sourceTree = "<group>";
@@ -336,6 +339,7 @@
 				0D040B012170774C00F8F8D0 /* AuthenticationMenuViewController.swift in Sources */,
 				0D22AEB321940C2600B915EA /* CheckoutCollectionViewController.swift in Sources */,
 				0D513B3E218191A40001F43D /* AccountViewController.swift in Sources */,
+				0D22AEB5219784A900B915EA /* NewAddressViewController.swift in Sources */,
 				0D040AE7216DB41F00F8F8D0 /* InfoViewController.swift in Sources */,
 				0D040B052171D15D00F8F8D0 /* RegisterViewController.swift in Sources */,
 				0DE6398A219014C60096498B /* CartCollectionViewController.swift in Sources */,

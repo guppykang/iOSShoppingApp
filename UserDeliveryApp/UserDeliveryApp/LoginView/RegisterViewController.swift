@@ -61,6 +61,13 @@ class RegisterViewController: UIViewController {
         return textField
     }()
     
+    let addressTextField : UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Address"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
     //Register Button
     let registerButton : UIButton = {
         let button = UIButton(type: .system)
@@ -80,12 +87,13 @@ class RegisterViewController: UIViewController {
             let email = usernameTextField.text,
             let password = passwordTextField.text,
             let name = nameTextField.text,
-            let phoneNumber = phoneNumberTextField.text
+            let phoneNumber = phoneNumberTextField.text,
+            let address = addressTextField.text
             
             else {
                 
                 return
-        }
+            }
         
         Auth.auth().createUser(withEmail: email, password: password) { user, error in
             //if there are no errors, you try to sign in to authenticate that it is working
@@ -126,6 +134,10 @@ class RegisterViewController: UIViewController {
             
             //add the order to the NewOrders
             userReference.child("NewOrders").child("1").setValue(currentOrderPath)
+            
+            userReference.child("Addresses").child("Default").setValue(address)
+            userReference.child("Addresses").child("Counter").setValue(1)
+
             
             userReference.updateChildValues(newUserValues, withCompletionBlock: {(newChildError, ref) in
                 if (newChildError != nil){
@@ -176,6 +188,7 @@ class RegisterViewController: UIViewController {
         view.addSubview(inputContainterView)
         view.addSubview(signInLabel)
         view.addSubview(backToSignInButton)
+        view.addSubview(addressTextField)
         
         
         //title Label
@@ -197,19 +210,25 @@ class RegisterViewController: UIViewController {
         nameTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
         nameTextField.topAnchor.constraint(equalTo: inputContainterView.topAnchor).isActive  = true
         nameTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
-        nameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        nameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/5).isActive  = true
         
         //Phone Number
         phoneNumberTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
         phoneNumberTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor).isActive  = true
         phoneNumberTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
-        phoneNumberTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        phoneNumberTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/5).isActive  = true
+        
+        //address
+        addressTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
+        addressTextField.topAnchor.constraint(equalTo: phoneNumberTextField.bottomAnchor).isActive  = true
+        addressTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
+        addressTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/5).isActive  = true
         
         //username text field
         usernameTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
-        usernameTextField.topAnchor.constraint(equalTo: phoneNumberTextField.bottomAnchor).isActive  = true
+        usernameTextField.topAnchor.constraint(equalTo: addressTextField.bottomAnchor).isActive  = true
         usernameTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
-        usernameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        usernameTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/5).isActive  = true
         
         
         
@@ -217,7 +236,7 @@ class RegisterViewController: UIViewController {
         passwordTextField.leftAnchor.constraint(equalTo: inputContainterView.leftAnchor, constant: 12).isActive  = true
         passwordTextField.topAnchor.constraint(equalTo: usernameTextField.bottomAnchor).isActive  = true
         passwordTextField.widthAnchor.constraint(equalTo: inputContainterView.widthAnchor).isActive  = true
-        passwordTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/4).isActive  = true
+        passwordTextField.heightAnchor.constraint(equalTo: inputContainterView.heightAnchor, multiplier: 1/5).isActive  = true
         
         //register button
         registerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
