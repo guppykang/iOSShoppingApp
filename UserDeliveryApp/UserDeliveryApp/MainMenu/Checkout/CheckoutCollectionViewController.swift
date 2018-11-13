@@ -12,10 +12,30 @@ import Firebase
 
 var addresses : [String] = []
 var phoneNumber : String = ""
+var times : [String] = ["Select", "9AM - 10AM", "10AM - 11AM", "11AM - 12PM", "12PM - 1PM", "2PM - 3PM", "4PM - 5PM", "5PM - 6PM"]
 
 var selectedAddressIndex = 0;
+var selectedTime = 0;
 
 class CheckoutCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    let payButton : UIButton = {
+        let doneButton = UIButton(type: .system)
+        doneButton.setTitle("PAY", for: .normal)
+        doneButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        doneButton.setTitleColor(.green, for: .normal)
+        
+        
+        doneButton.addTarget(self, action: #selector(handlePay), for: .touchUpInside)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        return doneButton
+    }()
+    
+    @objc func handlePay() {
+        //send when the order was submitted
+        //send the order delivery time
+        //send the address
+    }
    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -24,8 +44,11 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         var count : Int = 0
         
-        if pickerView.tag == 0 {
+        if pickerView.tag == 10 {
             count = addresses.count
+        }
+        else if pickerView.tag == 20 {
+            count = times.count
         }
         return count
     }
@@ -33,16 +56,22 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         var title : String!
         
-        if pickerView.tag == 0 {
+        if pickerView.tag == 10 {
             title = addresses[row]
+        }
+        else if pickerView.tag == 20 {
+            title = times[row]
         }
         return title
 
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView.tag == 0 {
+        if pickerView.tag == 10 {
             selectedAddressIndex = row
+        }
+        else if pickerView.tag == 20 {
+            selectedTime = row
         }
         
     }
@@ -51,7 +80,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let blackView = UIView()
     
     //address cell
-    var addressPickerView = UIPickerView()
+    var addressPickerView : UIPickerView!
+    var timePickerView : UIPickerView!
 
     var subMenu: UIView = {
         let view = UIView()
@@ -83,8 +113,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
                 DispatchQueue.main.async(execute: {
                     let defaultAddress = addresses.remove(at: addresses.count-1)
                     addresses.insert(defaultAddress, at: 0)
-                    self.addressPickerView.reloadAllComponents()
                     self.collectionView.reloadData()
+
                 })
                 
                 
@@ -99,7 +129,6 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     func getPhoneNumbers() {
         
         Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("phone number").observeSingleEvent(of: .value) { (phoneNumberSnapshot) in
-            print("HIIIIIIII")
             phoneNumber = phoneNumberSnapshot.value as! String
             
             DispatchQueue.main.async(execute: {
@@ -109,19 +138,33 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             
         }
     }
+    let phoneNumberLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Phone Number : "
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let phoneNumberTextField : UITextField = {
+        let label = UITextField()
+        label.backgroundColor = .gray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     func presentSubMenu(index : Int) {
         //the address cell
         if index == 0 {
-            getAddresses()
-
             subMenu = UIView()
             subMenu.backgroundColor = .white
-            
+            addressPickerView = UIPickerView()
+            addressPickerView.tag = 10
             addressPickerView.translatesAutoresizingMaskIntoConstraints = false
             addressPickerView.delegate = self
             addressPickerView.dataSource = self
             
-            addressPickerView.tag = 0
+            //addressPickerView.tag = 0
             
             let newAddressButton : UIButton = {
                 let button = UIButton(type: .system)
@@ -158,32 +201,67 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             newAddressButton.topAnchor.constraint(equalTo: subMenu.topAnchor, constant: 5).isActive = true
             
         }
+            
         //This is the delivery time
         else if index == 1 {
-            getPhoneNumbers()
             subMenu = UIView()
-            subMenu.backgroundColor = .red
+            subMenu.backgroundColor = .white
+            
+            
+            
+            phoneNumberTextField.placeholder = phoneNumber
+            
+            let switchPhoneNumberButton : UIButton = {
+                let doneButton = UIButton(type: .system)
+                doneButton.setTitle("Switch", for: .normal)
+                doneButton.addTarget(self, action: #selector(handleSwitchPhoneNumber), for: .touchUpInside)
+                doneButton.translatesAutoresizingMaskIntoConstraints = false
+                return doneButton
+            }()
+            
+            subMenu.addSubview(phoneNumberLabel)
+            subMenu.addSubview(switchPhoneNumberButton)
+            subMenu.addSubview(phoneNumberTextField)
+            
+            
+            phoneNumberTextField.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
+            phoneNumberTextField.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
+            
+            phoneNumberLabel.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
+            phoneNumberLabel.rightAnchor.constraint(equalTo: phoneNumberTextField.leftAnchor, constant: -5).isActive = true
+            
+            switchPhoneNumberButton.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
+            switchPhoneNumberButton.leftAnchor.constraint(equalTo: phoneNumberTextField.rightAnchor, constant: 10).isActive = true
             
             
         }
         //this is the phone number TODO : EVENTUALLY CHANGE THIS TO AN IN APP MESSAGING SYSTEM
         else if index == 2 {
             subMenu = UIView()
-            subMenu.backgroundColor = .purple
+            subMenu.backgroundColor = .white
             
-            let phoneNumber : UILabel = {
-                let label = UILabel()
-                label.text = "(858)519-6111"
-                
-                label.translatesAutoresizingMaskIntoConstraints = false
-                return label
+            timePickerView = UIPickerView()
+            timePickerView.translatesAutoresizingMaskIntoConstraints = false
+            timePickerView.tag = 20
+            timePickerView.delegate = self
+            timePickerView.dataSource = self
+            
+            let doneButton : UIButton = {
+                let doneButton = UIButton(type: .system)
+                doneButton.setTitle("Done", for: .normal)
+                doneButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+                doneButton.translatesAutoresizingMaskIntoConstraints = false
+                return doneButton
             }()
             
+            subMenu.addSubview(timePickerView)
+            subMenu.addSubview(doneButton)
             
-            subMenu.addSubview(phoneNumber)
+            doneButton.leftAnchor.constraint(equalTo: subMenu.leftAnchor, constant: 20).isActive = true
+            doneButton.topAnchor.constraint(equalTo: subMenu.topAnchor, constant: 5).isActive = true
             
-            phoneNumber.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
-            phoneNumber.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
+            timePickerView.centerXAnchor.constraint(equalTo: subMenu.centerXAnchor).isActive = true
+            timePickerView.centerYAnchor.constraint(equalTo: subMenu.centerYAnchor).isActive = true
             
         }
         
@@ -212,8 +290,17 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
 
     }
     
+    @objc func handleSwitchPhoneNumber() {
+        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("phone number").setValue(phoneNumberTextField.text)
+        phoneNumberTextField.text = ""
+        getPhoneNumbers()
+        handleDismiss()
+    }
+    
     @objc func handleDismiss() {
         defaultAddressLabel.text = addresses[selectedAddressIndex]
+        defaultTime.text = times[selectedTime]
+        
         UIView.animate(withDuration: 0.25) {
             self.blackView.alpha = 0
             if let window = UIApplication.shared.keyWindow {
@@ -223,11 +310,20 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
 
         }
     }
-    
+    func setupViews() {
+        view.addSubview(payButton)
+        payButton.backgroundColor = .white
+        
+        payButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -85).isActive = true
+        payButton.heightAnchor.constraint(equalToConstant: 85).isActive = true
+        payButton.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupViews()
+        
         getAddresses()
         getPhoneNumbers()
         collectionView.backgroundColor = .white
@@ -241,69 +337,154 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
         // Do any additional setup after loading the view.
     }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     let defaultAddressLabel = UILabel()
     let defaultPhoneNumber = UILabel()
+    let defaultTime = UILabel()
     
-
+    
+    let locationImage : UIImageView = {
+       let image = UIImageView()
+        image.image = UIImage(named: "LocationPin")
+        return image
+    }()
+    
+    let phoneImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "CheckoutPhone")
+        return image
+    }()
+    
+    let timeImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "Time")
+        return image
+    }()
+    
+    let cardNumberTextField : UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Card Number"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let cardExpirationTextField : UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "MM/YY"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let CVCTextField : UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "CVC"
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let savePaymentButton : UIButton = {
+        let doneButton = UIButton(type: .system)
+        doneButton.setTitle("Save", for: .normal)
+        doneButton.addTarget(self, action: #selector(handleSavePayment), for: .touchUpInside)
+        doneButton.backgroundColor = .green
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        return doneButton
+    }()
+    
+    @objc func handleSavePayment() {
+        //function for the strip API
+    }
+    
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? CheckoutCell
         
         if(indexPath.item == 0) {
-            print("Location")
             if addresses.count > 0 {
                 
                 defaultAddressLabel.text = addresses[selectedAddressIndex]
                 defaultAddressLabel.translatesAutoresizingMaskIntoConstraints = false
             
-                let image = UIImageView()
-                image.image = UIImage(named: "LocationPin")
-                image.translatesAutoresizingMaskIntoConstraints = false
+                
+                locationImage.translatesAutoresizingMaskIntoConstraints = false
                 
                 
-
-            
                 cell?.addSubview(defaultAddressLabel)
-                cell?.addSubview(image)
+                cell?.addSubview(locationImage)
+                
                 
                 defaultAddressLabel.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
                 defaultAddressLabel.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
                 
-                image.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
-                image.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
+                locationImage.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
+                locationImage.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
             }
             
         }
         else if indexPath.item == 1 {
-            print("Phone: \(phoneNumber)")
             if phoneNumber != "" {
                 defaultPhoneNumber.text = phoneNumber
                 defaultPhoneNumber.translatesAutoresizingMaskIntoConstraints = false
             
-                let image = UIImageView()
-                image.image = UIImage(named: "CheckoutPhone")
-                image.translatesAutoresizingMaskIntoConstraints = false
+                
+                phoneImage.translatesAutoresizingMaskIntoConstraints = false
             
-                cell?.addSubview(image)
+                cell?.addSubview(phoneImage)
                 cell?.addSubview(defaultPhoneNumber)
             
                 defaultPhoneNumber.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
                 defaultPhoneNumber.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
 
-                image.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
-                image.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
+                phoneImage.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
+                phoneImage.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
             }
         }
+        else if indexPath.item == 2 {
+            defaultTime.text = "Select"
+            defaultTime.translatesAutoresizingMaskIntoConstraints = false
+            
+            
+            timeImage.translatesAutoresizingMaskIntoConstraints = false
+            
+            cell?.addSubview(timeImage)
+            cell?.addSubview(defaultTime)
+            
+            defaultTime.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
+            defaultTime.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
+            
+            timeImage.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
+            timeImage.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
+            
+            
+        }
         else {
-            print("hi mom")
+            cell?.addSubview(cardNumberTextField)
+            cell?.addSubview(cardExpirationTextField)
+            cell?.addSubview(CVCTextField)
+            cell?.addSubview(savePaymentButton)
+            
+            cardNumberTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
+            cardNumberTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
+            
+            cardExpirationTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
+            cardExpirationTextField.leftAnchor.constraint(equalTo: cardNumberTextField.rightAnchor, constant: 3).isActive = true
+            
+            CVCTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
+            CVCTextField.leftAnchor.constraint(equalTo: cardExpirationTextField.rightAnchor, constant: 3).isActive = true
+            
+            savePaymentButton.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!, constant: -5).isActive = true
+            savePaymentButton.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
         }
         
         return cell!
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if indexPath.item == 3 {
+            return CGSize(width: view.frame.width, height: 250)
+        }
         return CGSize(width: view.frame.width, height: 75)
     }
     
