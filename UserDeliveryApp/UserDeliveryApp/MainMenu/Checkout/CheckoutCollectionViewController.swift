@@ -35,6 +35,15 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
         //send when the order was submitted
         //send the order delivery time
         //send the address
+        
+        //TODO : CHECK TO MAKE SURE ALL THE FIELDS HAVE BEEN FILLED OUT
+        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("OrderCounter").observeSingleEvent(of: .value) { (orderSnapshot) in
+            let orderNumber = String(orderSnapshot.value as! Int)
+            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("Address").setValue(addresses[selectedAddressIndex])
+            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("DeliveryTime").setValue(times[selectedTime])
+            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("TimeOrdered").setValue("Right now")
+
+        }
     }
    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -337,7 +346,7 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
         // Do any additional setup after loading the view.
     }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return 5
     }
     
     let defaultAddressLabel = UILabel()
@@ -366,6 +375,9 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let cardNumberTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Card Number"
+        tf.layer.borderColor = UIColor.gray.cgColor
+        tf.layer.borderWidth = 1.0
+        
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -373,6 +385,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let cardExpirationTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "MM/YY"
+        tf.layer.borderColor = UIColor.gray.cgColor
+        tf.layer.borderWidth = 1.0
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -380,6 +394,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let CVCTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "CVC"
+        tf.layer.borderColor = UIColor.gray.cgColor
+        tf.layer.borderWidth = 1.0
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -393,16 +409,128 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
         return doneButton
     }()
     
+    
+    
+    var cardNumber : String!
+    var expirationDate : String!
+    var CVC : String!
+    
     @objc func handleSavePayment() {
-        //function for the strip API
+        if cardNumberTextField.text != "" && cardExpirationTextField.text != "" && CVCTextField.text != "" {
+            cardNumber = cardNumberTextField.text
+            expirationDate = cardExpirationTextField.text
+            CVC = CVCTextField.text
+        }
+        else {
+            return
+        }
+        
+        
+        
+        
     }
+    
+    
+    var subBalance : String!
+    var deliveryCost : String!
+    
+    
+    
+    let subBalanceLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    let deliveryCostLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    let totalCostLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        return label
+    }()
+    
+    let subBalanceTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Sub Balance:"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    let deliveryCostTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Delivery Fee:"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        return label
+    }()
+    let totalCostTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Total Cost:"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        return label
+    }()
+    
     
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? CheckoutCell
-        
-        if(indexPath.item == 0) {
+        if indexPath.item == 4 {
+            
+            
+            
+            deliveryCost = "5.99"
+            let totalCost = Double(subBalance)! + Double(deliveryCost)!
+            let realTotalCost = String(format: "%.2f", totalCost)
+            
+            
+            subBalanceLabel.text = subBalance
+            deliveryCostLabel.text = "$\(deliveryCost!)"
+            totalCostLabel.text = ("$\(realTotalCost)")
+            
+            cell?.addSubview(subBalanceLabel)
+            cell?.addSubview(deliveryCostLabel)
+            cell?.addSubview(totalCostLabel)
+            cell?.addSubview(subBalanceTitleLabel)
+            cell?.addSubview(deliveryCostTitleLabel)
+            cell?.addSubview(totalCostTitleLabel)
+            
+            subBalanceTitleLabel.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
+            subBalanceTitleLabel.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
+            subBalanceLabel.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant : -5).isActive = true
+            subBalanceLabel.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
+            
+            deliveryCostTitleLabel.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
+            deliveryCostTitleLabel.topAnchor.constraint(equalTo: subBalanceTitleLabel.bottomAnchor, constant: 5).isActive = true
+            deliveryCostLabel.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant : -5).isActive = true
+            deliveryCostLabel.topAnchor.constraint(equalTo: subBalanceLabel.bottomAnchor, constant: 5).isActive = true
+            
+            totalCostTitleLabel.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 10).isActive = true
+            totalCostTitleLabel.topAnchor.constraint(equalTo: deliveryCostTitleLabel.bottomAnchor, constant: 5).isActive = true
+            totalCostLabel.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant : -5).isActive = true
+            totalCostLabel.topAnchor.constraint(equalTo: deliveryCostLabel.bottomAnchor, constant: 5).isActive = true
+        }
+        else if(indexPath.item == 0) {
             if addresses.count > 0 {
+                let dividerLineView : UIView = {
+                    let view = UIView()
+                    view.backgroundColor = .gray
+                    view.translatesAutoresizingMaskIntoConstraints = false
+                    return view
+                }()
+                
+                let arrow : UIImageView = {
+                    let imageView = UIImageView()
+                    imageView.image = UIImage(named: "Arrow")
+                    imageView.translatesAutoresizingMaskIntoConstraints = false
+                    return imageView
+                }()
                 
                 defaultAddressLabel.text = addresses[selectedAddressIndex]
                 defaultAddressLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -413,7 +541,15 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
                 
                 cell?.addSubview(defaultAddressLabel)
                 cell?.addSubview(locationImage)
-                
+                cell?.addSubview(dividerLineView)
+                cell?.addSubview(arrow)
+
+                dividerLineView.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!).isActive = true
+                dividerLineView.widthAnchor.constraint(equalTo: (cell?.widthAnchor)!).isActive = true
+                dividerLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+
+                arrow.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant: -10).isActive = true
+                arrow.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
                 
                 defaultAddressLabel.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
                 defaultAddressLabel.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
@@ -425,6 +561,20 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
         }
         else if indexPath.item == 1 {
             if phoneNumber != "" {
+                let dividerLineView : UIView = {
+                    let view = UIView()
+                    view.backgroundColor = .gray
+                    view.translatesAutoresizingMaskIntoConstraints = false
+                    return view
+                }()
+                
+                let arrow : UIImageView = {
+                    let imageView = UIImageView()
+                    imageView.image = UIImage(named: "Arrow")
+                    imageView.translatesAutoresizingMaskIntoConstraints = false
+                    return imageView
+                }()
+                
                 defaultPhoneNumber.text = phoneNumber
                 defaultPhoneNumber.translatesAutoresizingMaskIntoConstraints = false
             
@@ -433,7 +583,16 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             
                 cell?.addSubview(phoneImage)
                 cell?.addSubview(defaultPhoneNumber)
-            
+                cell?.addSubview(dividerLineView)
+                cell?.addSubview(arrow)
+                
+                dividerLineView.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!).isActive = true
+                dividerLineView.widthAnchor.constraint(equalTo: (cell?.widthAnchor)!).isActive = true
+                dividerLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+                
+                arrow.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant: -10).isActive = true
+                arrow.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
+                
                 defaultPhoneNumber.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
                 defaultPhoneNumber.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
 
@@ -442,6 +601,20 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             }
         }
         else if indexPath.item == 2 {
+            let dividerLineView : UIView = {
+                let view = UIView()
+                view.backgroundColor = .gray
+                view.translatesAutoresizingMaskIntoConstraints = false
+                return view
+            }()
+            
+            let arrow : UIImageView = {
+                let imageView = UIImageView()
+                imageView.image = UIImage(named: "Arrow")
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                return imageView
+            }()
+            
             defaultTime.text = "Select"
             defaultTime.translatesAutoresizingMaskIntoConstraints = false
             
@@ -450,6 +623,15 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             
             cell?.addSubview(timeImage)
             cell?.addSubview(defaultTime)
+            cell?.addSubview(dividerLineView)
+            cell?.addSubview(arrow)
+            
+            dividerLineView.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!).isActive = true
+            dividerLineView.widthAnchor.constraint(equalTo: (cell?.widthAnchor)!).isActive = true
+            dividerLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            
+            arrow.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant: -10).isActive = true
+            arrow.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
             
             defaultTime.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
             defaultTime.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
@@ -459,54 +641,78 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             
             
         }
-        else {
+        else if indexPath.item == 3 {
+            let dividerLineView : UIView = {
+                let view = UIView()
+                view.backgroundColor = .gray
+                view.translatesAutoresizingMaskIntoConstraints = false
+                return view
+            }()
+            
+            let arrow : UIImageView = {
+                let imageView = UIImageView()
+                imageView.image = UIImage(named: "Arrow")
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                return imageView
+            }()
+            
             cell?.addSubview(cardNumberTextField)
             cell?.addSubview(cardExpirationTextField)
             cell?.addSubview(CVCTextField)
             cell?.addSubview(savePaymentButton)
+            cell?.addSubview(dividerLineView)
+            cell?.addSubview(arrow)
+            
+            dividerLineView.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!).isActive = true
+            dividerLineView.widthAnchor.constraint(equalTo: (cell?.widthAnchor)!).isActive = true
+            dividerLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+            
+            arrow.rightAnchor.constraint(equalTo: (cell?.rightAnchor)!, constant: -10).isActive = true
+            arrow.centerYAnchor.constraint(equalTo: (cell?.centerYAnchor)!).isActive = true
             
             cardNumberTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
             cardNumberTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
             
-            cardExpirationTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
-            cardExpirationTextField.leftAnchor.constraint(equalTo: cardNumberTextField.rightAnchor, constant: 3).isActive = true
+            cardExpirationTextField.topAnchor.constraint(equalTo: cardNumberTextField.bottomAnchor, constant: 20).isActive = true
+            cardExpirationTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
             
-            CVCTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
-            CVCTextField.leftAnchor.constraint(equalTo: cardExpirationTextField.rightAnchor, constant: 3).isActive = true
+            CVCTextField.topAnchor.constraint(equalTo: cardExpirationTextField.bottomAnchor, constant: 20).isActive = true
+            CVCTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
             
             savePaymentButton.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!, constant: -5).isActive = true
+            savePaymentButton.widthAnchor.constraint(equalTo: (cell?.widthAnchor)!).isActive = true
             savePaymentButton.centerXAnchor.constraint(equalTo: (cell?.centerXAnchor)!).isActive = true
+        }
+       
+        else {
+            print("somethign went wrong in the checkout")
         }
         
         return cell!
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item == 3 {
-            return CGSize(width: view.frame.width, height: 250)
+        if indexPath.item == 3  {
+            return CGSize(width: view.frame.width, height: 150)
+        }
+        else if indexPath.item == 4 {
+            return CGSize(width: view.frame.width, height: 80)
         }
         return CGSize(width: view.frame.width, height: 75)
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presentSubMenu(index : indexPath.item)
+        if indexPath.item < 3 {
+            presentSubMenu(index : indexPath.item)
+
+        }
     }
 
 }
 
 class CheckoutCell : UICollectionViewCell {
     
-    let dividerLineView : UIView = {
-        let view = UIView()
-        view.backgroundColor = .gray	
-        return view
-    }()
     
-    let arrow : UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Arrow")
-        return imageView
-    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -522,36 +728,6 @@ class CheckoutCell : UICollectionViewCell {
     }
     
     func setupViews() {
-        addSubview(dividerLineView)
-        addSubview(arrow)
         
-        dividerLineView.translatesAutoresizingMaskIntoConstraints = false
-        dividerLineView.widthAnchor.constraint(equalTo: self.widthAnchor, constant: 10).isActive = true
-        dividerLineView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        dividerLineView.topAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        
-        arrow.translatesAutoresizingMaskIntoConstraints = false
-        arrow.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        arrow.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15).isActive = true
     }
 }
-
-//class CustomAddressPickerView : UIPickerView, UIPickerViewDataSource, UIPickerViewDelegate {
-//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-//        return 1
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//        return addresses.count
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//        return addresses[row]
-//
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        selectedAddressIndex = row
-//    }
-//
-//}

@@ -138,6 +138,7 @@ class RegisterViewController: UIViewController {
             userReference.child("Addresses").child("Default").setValue(address)
             userReference.child("Addresses").child("Counter").setValue(1)
 
+            userReference.child("OrderCounter").setValue(1)
             
             userReference.updateChildValues(newUserValues, withCompletionBlock: {(newChildError, ref) in
                 if (newChildError != nil){

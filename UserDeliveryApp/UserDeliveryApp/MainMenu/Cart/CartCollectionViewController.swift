@@ -45,6 +45,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let checkoutViewController = CheckoutCollectionViewController(collectionViewLayout : layout)
+        checkoutViewController.subBalance = totalBalance
         
         navigationController?.pushViewController(checkoutViewController, animated: true)
         
@@ -246,7 +247,6 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
             blackView.frame = window.frame
             blackView.alpha = 0
             
-            print(window.frame.height)
             subMenu.frame = CGRect(x: 0, y: view.frame.height, width: window.frame.width, height: 200)
             
             
@@ -394,9 +394,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ItemCell
 
-        print(indexPath.item)
         if indexPath.item != cart.count {
-            print("regular cell")
             cell.nameLabel.text = cart[indexPath.item].name
             cell.imageView.loadImageUsingCacheWithUrlString(cart[indexPath.item].imageURL!)
             cell.quantityLabel.text = "Quantity : \(quantities[indexPath.item])"
@@ -424,7 +422,7 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
             setupChangeQuantityBottomControl(index: indexPath.item)
         }
         else {
-            print("hi mom")
+            print("Cart VC something's wrong here")
         }
     }
 
