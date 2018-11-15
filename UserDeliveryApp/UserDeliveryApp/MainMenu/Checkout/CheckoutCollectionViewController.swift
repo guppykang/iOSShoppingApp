@@ -19,6 +19,9 @@ var selectedTime = 0;
 
 class CheckoutCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIPickerViewDataSource, UIPickerViewDelegate {
     
+    var cart : [Item] = []
+    var quantities : [String] = []
+    
     let payButton : UIButton = {
         let doneButton = UIButton(type: .system)
         doneButton.setTitle("PAY", for: .normal)
@@ -32,17 +35,47 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     }()
     
     @objc func handlePay() {
-        //send when the order was submitted
-        //send the order delivery time
-        //send the address
         
-        //TODO : CHECK TO MAKE SURE ALL THE FIELDS HAVE BEEN FILLED OUT
-        Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("OrderCounter").observeSingleEvent(of: .value) { (orderSnapshot) in
-            let orderNumber = String(orderSnapshot.value as! Int)
-            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("Address").setValue(addresses[selectedAddressIndex])
-            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("DeliveryTime").setValue(times[selectedTime])
-            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("TimeOrdered").setValue("Right now")
+        //RIX TODO : check to make sure a valid card is saved and ready to use
+        //stripe api call to charge the amount and all the other magic you do
+        //if everything passed it should segue to the ConfirmationViewController.swift
+        if selectedTime != 0 {
+            let date = Date()
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year,.month,.day,.hour,.minute,.second], from: date)
+            
+            let year = components.year
+            let month = components.month
+            let day = components.day
+            let hour = components.hour
+            let minute = components.minute
+            let second = components.second
+            
+            let today_string = String(year!)  + String(month!)  + String(day!)  + String(hour!)  + String(minute!)  +  String(second!)
 
+            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("OrderCounter").observeSingleEvent(of: .value) { (orderSnapshot) in
+                let orderNumber = String(orderSnapshot.value as! Int)
+                Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("Address").setValue(addresses[selectedAddressIndex])
+                Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("DeliveryTime").setValue(times[selectedTime])
+                Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("ActiveOrders").child(orderNumber).child("TimeOrdered").setValue(today_string)
+
+                
+            }
+            
+            //TODO : wipe the cart and start over by incrementing the coutner for a new order and update user current Order
+            let vc = ConfirmationViewController()
+            self.present(vc, animated: true, completion: nil)
+
+            
+        }
+        else {
+            let alert = UIAlertController(title: "Incomplete Information",
+                                          message: "Please Select a Delivery Time",
+                                          preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            
+            self.present(alert, animated: true, completion: nil)
         }
     }
    
@@ -330,7 +363,7 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupViews()
         
         getAddresses()
@@ -375,9 +408,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let cardNumberTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Card Number"
-        tf.layer.borderColor = UIColor.gray.cgColor
-        tf.layer.borderWidth = 1.0
-        
+        tf.borderStyle = .roundedRect
+        tf.layer.cornerRadius = 12
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -385,8 +417,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let cardExpirationTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "MM/YY"
-        tf.layer.borderColor = UIColor.gray.cgColor
-        tf.layer.borderWidth = 1.0
+        tf.borderStyle = .roundedRect
+        tf.layer.cornerRadius = 12
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -394,8 +426,8 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
     let CVCTextField : UITextField = {
         let tf = UITextField()
         tf.placeholder = "CVC"
-        tf.layer.borderColor = UIColor.gray.cgColor
-        tf.layer.borderWidth = 1.0
+        tf.borderStyle = .roundedRect
+        tf.layer.cornerRadius = 12
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -425,7 +457,7 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             return
         }
         
-        
+        //RIX TODO: SAVE STRIPE TOKEN TO FIREBASE
         
         
     }
@@ -673,10 +705,10 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
             cardNumberTextField.topAnchor.constraint(equalTo: (cell?.topAnchor)!, constant: 5).isActive = true
             cardNumberTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
             
-            cardExpirationTextField.topAnchor.constraint(equalTo: cardNumberTextField.bottomAnchor, constant: 20).isActive = true
+            cardExpirationTextField.topAnchor.constraint(equalTo: cardNumberTextField.bottomAnchor, constant: 5).isActive = true
             cardExpirationTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
             
-            CVCTextField.topAnchor.constraint(equalTo: cardExpirationTextField.bottomAnchor, constant: 20).isActive = true
+            CVCTextField.topAnchor.constraint(equalTo: cardExpirationTextField.bottomAnchor, constant: 5).isActive = true
             CVCTextField.leftAnchor.constraint(equalTo: (cell?.leftAnchor)!, constant: 5).isActive = true
             
             savePaymentButton.bottomAnchor.constraint(equalTo: (cell?.bottomAnchor)!, constant: -5).isActive = true

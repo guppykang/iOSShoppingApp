@@ -45,8 +45,9 @@ class CartCollectionViewController: UICollectionViewController, UICollectionView
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let checkoutViewController = CheckoutCollectionViewController(collectionViewLayout : layout)
+        checkoutViewController.cart = cart
         checkoutViewController.subBalance = totalBalance
-        
+        checkoutViewController.quantities = quantities
         navigationController?.pushViewController(checkoutViewController, animated: true)
         
     }

@@ -58,8 +58,6 @@ class NewAddressViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        
-        
         view.addSubview(addressTextField)
         view.addSubview(addAddressButton)
         
