@@ -61,6 +61,27 @@ class CheckoutCollectionViewController: UICollectionViewController, UICollection
 
                 
             }
+            Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("OrderCounter").observeSingleEvent(of: .value) { (orderSnapshot) in
+                var orderNumber = orderSnapshot.value as! Int
+                
+                orderNumber += 1
+                let orderNumberString = String(orderNumber)
+                
+                Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").removeValue()
+                
+                //create the new order
+                Database.database().reference().child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child(orderNumberString).child("Time").setValue("TBD")
+                
+                //get the path to the new order
+                let currentOrderPath = Database.database().reference().child("ActiveOrders").child((Auth.auth().currentUser?.uid)!).child(orderNumberString).url
+
+                //set the current order
+                Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("CurrentOrder").child(orderNumberString).setValue(currentOrderPath)
+                
+                //set the new current order number
+                Database.database().reference().child("Users").child((Auth.auth().currentUser?.uid)!).child("OrderCounter").setValue(orderNumber)
+                
+            }
             
             //TODO : wipe the cart and start over by incrementing the coutner for a new order and update user current Order
             let vc = ConfirmationViewController()

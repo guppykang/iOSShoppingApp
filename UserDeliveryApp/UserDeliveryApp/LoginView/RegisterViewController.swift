@@ -132,8 +132,6 @@ class RegisterViewController: UIViewController {
             //add the order to the currentOrder
             userReference.child("CurrentOrder").child("1").setValue(currentOrderPath)
             
-            //add the order to the NewOrders
-            userReference.child("NewOrders").child("1").setValue(currentOrderPath)
             
             userReference.child("Addresses").child("Default").setValue(address)
             userReference.child("Addresses").child("Counter").setValue(1)
